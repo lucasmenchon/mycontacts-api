@@ -33,7 +33,7 @@ namespace MyContactsAPI.Controllers
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task<IActionResult> UpdateUser([FromBody] UpdateUserViewModel userUpdate)
         {
             try
@@ -48,7 +48,7 @@ namespace MyContactsAPI.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete]
         public async Task<IActionResult> DeleteUser()
         {
             try
