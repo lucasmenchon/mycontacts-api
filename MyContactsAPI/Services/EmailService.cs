@@ -1,6 +1,7 @@
 ﻿using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
+using MyContactsAPI.Helper;
 using MyContactsAPI.Interfaces;
 using System.ComponentModel.DataAnnotations;
 
@@ -19,25 +20,21 @@ namespace MyContactsAPI.Services
         {
             try
             {
-                string host = _configuration.GetValue<string>("smtp:host");
-                int port = _configuration.GetValue<int>("smtp:port");
-                string username = _configuration.GetValue<string>("smtp:username");
-                string password = _configuration.GetValue<string>("smtp:password");
-                string name = _configuration.GetValue<string>("smtp:name");
-
+                // Construir mensagem de e-mail
                 var emailMessage = new MimeMessage();
-                emailMessage.From.Add(new MailboxAddress(name, username));
+                emailMessage.From.Add(new MailboxAddress(_configuration["smtp:name"], _configuration["smtp:username"]));
                 emailMessage.To.Add(new MailboxAddress("", email));
                 emailMessage.Subject = "Verificação da conta";
 
                 var bodyBuilder = new BodyBuilder();
-                bodyBuilder.HtmlBody = $"Seu código de verificação é: {verificationCode}";
+                bodyBuilder.HtmlBody = HtmlEmail.GenerateVerificationEmailHTML(verificationCode);
                 emailMessage.Body = bodyBuilder.ToMessageBody();
 
+                // Enviar e-mail usando SmtpClient
                 using (var client = new SmtpClient())
                 {
-                    await client.ConnectAsync(host, port, SecureSocketOptions.StartTls);
-                    await client.AuthenticateAsync(username, password);
+                    await client.ConnectAsync(_configuration["smtp:host"], _configuration.GetValue<int>("smtp:port"), SecureSocketOptions.StartTls);
+                    await client.AuthenticateAsync(_configuration["smtp:username"], _configuration["smtp:password"]);
                     await client.SendAsync(emailMessage);
                     await client.DisconnectAsync(true);
                 }

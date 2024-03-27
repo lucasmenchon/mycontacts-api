@@ -22,55 +22,97 @@ namespace MyContactsAPI.Repositories
             _emailService = email;
         }
 
+        //public async Task<Response> CreateUserAsync(CreateUserDto createUserDto)
+        //{
+        //    Email email;
+        //    Password password;
+        //    User user;
+
+        //    try
+        //    {
+        //        email = new Email(createUserDto.Email);
+        //        password = new Password(createUserDto.Password);
+        //        user = new User(createUserDto.Name, createUserDto.Username, email, password);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new Response(ex.Message, 400);
+        //    }
+
+        //    try
+        //    {
+        //        bool existingUser = await _context.Users.AsNoTracking().AnyAsync(u => u.Email.Address == createUserDto.Email);
+        //        if (existingUser)
+        //            return new Response("Este email já está em uso.", 400);
+        //    }
+        //    catch
+        //    {
+        //        return new Response("Falha ao verificar email cadastrado.", 500);
+        //    }
+
+        //    try
+        //    {
+        //        await _context.Users.AddAsync(user);
+
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch
+        //    {
+        //        return new Response("Falha no cadastro.", 500);
+        //    }
+
+        //    try
+        //    {
+        //        await _emailService.SendVerificationEmailAsync(email.Address, email.Verification.Code);
+        //    }
+        //    catch
+        //    {
+        //        return new Response("Falha ao enviar código de verificação.", 500);
+        //    }
+
+        //    return new Response("Cadastro realizado com sucesso. Enviamos para seu email o link de ativação da sua conta.", 201);
+        //}
         public async Task<Response> CreateUserAsync(CreateUserDto createUserDto)
         {
-            Email email;
-            Password password;
-            User user;
-
             try
             {
-                email = new Email(createUserDto.Email);
-                password = new Password(createUserDto.Password);
-                user = new User(createUserDto.Name, createUserDto.Username, email, password);
-            }
-            catch (Exception ex)
-            {
-                return new Response(ex.Message, 400);
-            }
-
-            try
-            {
+                // Validar o email antes de criar o objeto User
+                var email = new Email(createUserDto.Email);
                 bool existingUser = await _context.Users.AsNoTracking().AnyAsync(u => u.Email.Address == createUserDto.Email);
                 if (existingUser)
                     return new Response("Este email já está em uso.", 400);
+
+                var password = new Password(createUserDto.Password);
+                var user = new User(createUserDto.Name, createUserDto.Username, email, password);
+
+                // Começar a transação
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        await _context.Users.AddAsync(user);
+                        await _context.SaveChangesAsync();
+
+                        // Enviar e-mail de verificação
+                        await _emailService.SendVerificationEmailAsync(email.Address, email.Verification.Code);
+
+                        // Commit da transação se tudo ocorrer bem
+                        await transaction.CommitAsync();
+
+                        return new Response("Cadastro realizado com sucesso. Enviamos para seu email o link de ativação da sua conta.", 201);
+                    }
+                    catch
+                    {
+                        // Reverter a transação em caso de falha
+                        await transaction.RollbackAsync();
+                        return new Response("Falha no cadastro.", 500);
+                    }
+                }
             }
             catch
             {
-                return new Response("Falha ao verificar email cadastrado.", 500);
+                return new Response("Falha ao criar usuário.", 500);
             }
-
-            try
-            {
-                await _context.Users.AddAsync(user);
-
-                await _context.SaveChangesAsync();
-            }
-            catch
-            {
-                return new Response("Falha no cadastro.", 500);
-            }
-
-            try
-            {
-                await _emailService.SendVerificationEmailAsync(email.Address, email.Verification.Code);
-            }
-            catch
-            {
-                return new Response("Falha ao enviar código de verificação.", 500);
-            }
-
-            return new Response("Cadastro realizado com sucesso. Enviamos para seu email o link de ativação da sua conta.", 201);
         }
 
         public async Task<bool> DeleteUserAsync(int id)
