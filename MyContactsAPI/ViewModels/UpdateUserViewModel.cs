@@ -1,7 +1,4 @@
-﻿using MyContactsAPI.Enums;
-using System.ComponentModel.DataAnnotations;
-
-namespace MyContactsAPI.ViewModels
+﻿namespace MyContactsAPI.ViewModels
 {
     public class UpdateUserViewModel
     {

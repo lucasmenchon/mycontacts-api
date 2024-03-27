@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace MyContactsAPI.Extensions
+namespace MyContactsAPI.SharedContext
 {
     public static class StringExtension
     {

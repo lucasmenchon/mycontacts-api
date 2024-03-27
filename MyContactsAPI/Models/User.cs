@@ -1,6 +1,4 @@
-﻿using MyContactsAPI.Enums;
-using MyContactsAPI.Interfaces;
-using System.ComponentModel.DataAnnotations;
+﻿using System.Text.Json.Serialization;
 
 namespace MyContactsAPI.Models
 {
@@ -9,9 +7,11 @@ namespace MyContactsAPI.Models
         protected User()
         {
         }
-        public User(string name, Email email, Password password)
+
+        public User(string name, string username, Email email, Password password)
         {
             Name = name;
+            Username = username;
             Email = email;
             Password = password;
         }
@@ -22,18 +22,16 @@ namespace MyContactsAPI.Models
             Password = new Password(password);
         }
 
-
         public string Name { get; set; }
-        public string Username { get; set; }
-        public Password Password { get; private set; } = null!;
+        public string Username { get; set; }        
         public Email Email { get; set; }
+        public Password Password { get; private set; } = null!;
         public DateOnly RegisterDate { get; set; }
         public DateOnly? UpdateDate { get; set; }
 
         public void ChangePassword(string newPassword)
         {
             Password = new Password(newPassword);
-        }
-
+        }        
     }
 }

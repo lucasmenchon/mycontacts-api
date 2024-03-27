@@ -1,10 +1,11 @@
-﻿using MyContactsAPI.Extensions;
+﻿using MyContactsAPI.SharedContext;
 using System.Text.RegularExpressions;
 
 namespace MyContactsAPI.Models
 {
     public partial class Email : ValueObject
     {
+        // regular expression to validate email
         private const string Pattern = @"^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$";
 
         protected Email()

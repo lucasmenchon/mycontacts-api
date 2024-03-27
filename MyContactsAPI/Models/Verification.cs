@@ -1,4 +1,6 @@
-﻿namespace MyContactsAPI.Models
+﻿using MyContactsAPI.SharedContext;
+
+namespace MyContactsAPI.Models
 {
     public class Verification : ValueObject
     {
@@ -7,7 +9,7 @@
         }
 
         public string Code { get; } = Guid.NewGuid().ToString("N")[..6].ToUpper();
-        public DateTime? ExpiresAt { get; private set; } = DateTime.UtcNow.AddMinutes(5);
+        public DateTime? ExpiresAt { get; private set; } =  DateTime.UtcNow.AddHours(2);      
         public DateTime? VerifiedAt { get; private set; } = null;
         public bool IsActive => VerifiedAt != null && ExpiresAt == null;
 

@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MyContactsAPI.Dtos;
 using MyContactsAPI.Interfaces;
 using MyContactsAPI.Models;
 using MyContactsAPI.ViewModels;
 using System.Security.Claims;
+using System.Threading;
 
 namespace MyContactsAPI.Controllers
 {
@@ -20,12 +22,12 @@ namespace MyContactsAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateUser(User user)
+        public async Task<IActionResult> CreateUser([FromBody] CreateUserDto createUserDto)
         {
             try
             {
-                var createdUser = await _userRepository.CreateUserAsync(user);
-                return CreatedAtAction(nameof(UserController), new { id = createdUser.Id }, createdUser);
+                var response = await _userRepository.CreateUserAsync(createUserDto);
+                return Ok(response.Message);
             }
             catch (Exception error)
             {

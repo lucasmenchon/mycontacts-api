@@ -4,33 +4,73 @@ using MyContactsAPI.Models;
 using MyContactsAPI.ViewModels;
 using MyContactsAPI.Helper;
 using Microsoft.EntityFrameworkCore;
+using MyContactsAPI.Dtos;
+using Org.BouncyCastle.Asn1.Ocsp;
+using System.Threading;
+using MyContactsAPI.Services;
 
 namespace MyContactsAPI.Repositories
 {
     public class UserRepository : IUserRepository
     {
         private readonly DataContext _context;
+        private readonly IEmailService _emailService;
 
-        public UserRepository(DataContext dataContext)
+        public UserRepository(DataContext dataContext, IEmailService email)
         {
             this._context = dataContext;
+            _emailService = email;
         }
 
-        public async Task<User> CreateUserAsync(User user)
+        public async Task<Response> CreateUserAsync(CreateUserDto createUserDto)
         {
-            user.RegisterDate = DateOnly.FromDateTime(DateTime.Today);
-            string userPassword = user.Password.ToString();
-            Password password = new Password(userPassword);
-            user.ChangePassword(password.Hash);
+            Email email;
+            Password password;
+            User user;
 
-            if (user == null)
-                throw new ArgumentNullException(nameof(user));
+            try
+            {
+                email = new Email(createUserDto.Email);
+                password = new Password(createUserDto.Password);
+                user = new User(createUserDto.Name, createUserDto.Username, email, password);
+            }
+            catch (Exception ex)
+            {
+                return new Response(ex.Message, 400);
+            }
 
-            _context.Users.Add(user);
+            try
+            {
+                bool existingUser = await _context.Users.AsNoTracking().AnyAsync(u => u.Email.Address == createUserDto.Email);
+                if (existingUser)
+                    return new Response("Este e-mail já está em uso.", 400);
+            }
+            catch
+            {
+                return new Response("Falha ao verificar E-mail cadastrado.", 500);
+            }
 
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.Users.AddAsync(user);
 
-            return user;
+                await _context.SaveChangesAsync();
+            }
+            catch
+            {
+                return new Response("Falha no cadastro.", 500);
+            }
+
+            try
+            {
+                await _emailService.SendVerificationEmailAsync(email.Address, email.Verification.Code);
+            }
+            catch
+            {
+                return new Response("Falha ao enviar código de verificação.", 500);
+            }
+
+            return new Response("Cadastro realizado.", 200);
         }
 
         public async Task<bool> DeleteUserAsync(int id)
@@ -65,7 +105,7 @@ namespace MyContactsAPI.Repositories
             existingUser.Name = userUpdate.Name;
             existingUser.Username = userUpdate.Username;
             existingUser.Email = userUpdate.Email;
-            existingUser.UpdateDate = DateOnly.FromDateTime(DateTime.Today);
+            existingUser.UpdateDate = DateOnly.FromDateTime(DateTime.UtcNow);
 
             await _context.SaveChangesAsync();
 

@@ -2,19 +2,20 @@
 using MailKit.Security;
 using MimeKit;
 using MyContactsAPI.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
-namespace MyContactsAPI.Helper
+namespace MyContactsAPI.Services
 {
-    public class EmailModel : IEmail
+    public class EmailService : IEmailService
     {
         private readonly IConfiguration _configuration;
 
-        public EmailModel(IConfiguration configuration)
+        public EmailService(IConfiguration configuration)
         {
             _configuration = configuration;
         }
 
-        public async Task<bool> SendEmailAsync(string email, string subject, string message)
+        public async Task SendVerificationEmailAsync(string email, string verificationCode)
         {
             try
             {
@@ -27,10 +28,10 @@ namespace MyContactsAPI.Helper
                 var emailMessage = new MimeMessage();
                 emailMessage.From.Add(new MailboxAddress(name, username));
                 emailMessage.To.Add(new MailboxAddress("", email));
-                emailMessage.Subject = subject;
+                emailMessage.Subject = "Verificação da conta";
 
                 var bodyBuilder = new BodyBuilder();
-                bodyBuilder.HtmlBody = message;
+                bodyBuilder.HtmlBody = $"Seu código de verificação é: {verificationCode}";
                 emailMessage.Body = bodyBuilder.ToMessageBody();
 
                 using (var client = new SmtpClient())
@@ -40,14 +41,12 @@ namespace MyContactsAPI.Helper
                     await client.SendAsync(emailMessage);
                     await client.DisconnectAsync(true);
                 }
-
-                return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                return false;
+                throw new Exception("Erro ao enviar e-mail de verificação.", ex);
             }
         }
+
     }
 }

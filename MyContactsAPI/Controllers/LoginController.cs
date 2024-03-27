@@ -10,11 +10,11 @@ namespace MyContactsAPI.Controllers
     public class LoginController : Controller
     {
         private readonly IUserRepository _userRepository;
-        private readonly IEmail _email;
+        private readonly IEmailService _email;
         private readonly IUserPasswordService _userPasswordService;
         private readonly IJwtTokenService _jwtTokenService;
 
-        public LoginController(IUserRepository userRepository, IEmail email, IJwtTokenService jwtTokenService, IUserPasswordService userPasswordService)
+        public LoginController(IUserRepository userRepository, IEmailService email, IJwtTokenService jwtTokenService, IUserPasswordService userPasswordService)
         {
             _userRepository = userRepository;
             _email = email;

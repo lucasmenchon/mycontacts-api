@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using MyContactsAPI.Extensions;
+using MyContactsAPI.SharedContext;
 using System.Security.Cryptography;
 
 namespace MyContactsAPI.Models
@@ -26,7 +27,7 @@ namespace MyContactsAPI.Models
             => Verify(Hash, plainTextPassword);
 
         public string Hash { get; } = string.Empty;
-        public string ResetCode { get; } = Guid.NewGuid().ToString("N")[..8].ToUpper();
+        public string ResetCode { get; } = string.Empty; //Guid.NewGuid().ToString("N")[..8].ToUpper();
 
         private static string Generate(
             short length = 16,

@@ -1,4 +1,4 @@
-﻿namespace MyContactsAPI.Models
+﻿namespace MyContactsAPI.SharedContext
 {
     public abstract class ValueObject
     {

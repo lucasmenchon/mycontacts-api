@@ -13,9 +13,9 @@ namespace MyContactsAPI.Controllers
         private readonly IUserRepository _userRepository;
         private readonly IUserPasswordService _userPasswordService;
         private readonly JwtTokenService _jwtTokenService;
-        private readonly IEmail _email;
+        private readonly IEmailService _email;
 
-        public PasswordResetController(IUserRepository userRepository, IUserPasswordService userPasswordService, JwtTokenService jwtTokenService, IEmail email)
+        public PasswordResetController(IUserRepository userRepository, IUserPasswordService userPasswordService, JwtTokenService jwtTokenService, IEmailService email)
         {
             _userRepository = userRepository;
             _userPasswordService = userPasswordService;
@@ -78,7 +78,7 @@ namespace MyContactsAPI.Controllers
                     string message = $"Para redefinir sua senha, clique no link a seguir: <a href='{resetLink}'>Redefinir Senha</a>";
 
                     // Envia o e-mail com o link de redefinição de senha
-                    await _email.SendEmailAsync(email, subject, message);
+                    //await _email.SendVerificationEmailAsync(email, subject, message);
 
                     return Ok("Um e-mail com instruções para redefinir sua senha foi enviado para o seu endereço de e-mail.");
                 }

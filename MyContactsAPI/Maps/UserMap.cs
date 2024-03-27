@@ -13,50 +13,64 @@ namespace MyContactsAPI.Maps
 
             builder.Property(x => x.Name)
                 .HasColumnName("Name")
-                .HasColumnType("varchar(120)")
+                .HasColumnType("varchar")
                 .HasMaxLength(120)
                 .IsRequired(true);
 
-            builder.OwnsOne(x => x.Email, email =>
-            {
-                email.Property(x => x.Address)
-                    .HasColumnName("Email")
-                    .HasColumnType("varchar(255)")
-                    .IsRequired(true);
+            builder.Property(x => x.Username)
+                .HasColumnName("Username")
+                .HasColumnType("varchar")
+                .HasMaxLength(120)
+                .IsRequired(true);
 
-                email.OwnsOne(x => x.Verification, verification =>
-                {
-                    verification.Property(x => x.Code)
-                        .HasColumnName("EmailVerificationCode")
-                        .HasColumnType("varchar(255)")
-                        .IsRequired(true);
+            builder.OwnsOne(x => x.Email)
+            .Property(x => x.Address)
+            .HasColumnName("Email")
+            .IsRequired(true);
 
-                    verification.Property(x => x.ExpiresAt)
-                        .HasColumnName("EmailVerificationExpiresAt")
-                        .HasColumnType("timestamp")
-                        .IsRequired(false);
+            builder.OwnsOne(x => x.Email)
+             .OwnsOne(x => x.Verification)
+             .Property(x => x.Code)
+             .HasColumnName("EmailVerificationCode")
+             .IsRequired(true);
 
-                    verification.Property(x => x.VerifiedAt)
-                        .HasColumnName("EmailVerificationVerifiedAt")
-                        .HasColumnType("timestamp")
-                        .IsRequired(false);
+            builder.OwnsOne(x => x.Email)
+           .OwnsOne(x => x.Verification)
+           .Property(x => x.ExpiresAt)
+           .HasColumnName("EmailVerificationExpiresAt")
+           .HasColumnType("timestamp(0)")
+           .IsRequired(false);
 
-                    verification.Ignore(x => x.IsActive);
-                });
-            });
+            builder.OwnsOne(x => x.Email)
+                .OwnsOne(x => x.Verification)
+                .Property(x => x.VerifiedAt)
+                .HasColumnName("EmailVerificationVerifiedAt")
+                .HasColumnType("timestamp(0)")
+                .IsRequired(false);
 
-            builder.OwnsOne(x => x.Password, password =>
-            {
-                password.Property(x => x.Hash)
-                    .HasColumnName("PasswordHash")
-                    .HasColumnType("varchar(255)") 
-                    .IsRequired();
+            //builder.Property(x => x.RegisterDate)
+            //    .HasColumnName("RegisterDate")
+            //    .HasColumnType("timestamp(0)")
+            //    .IsRequired();
 
-                password.Property(x => x.ResetCode)
-                    .HasColumnName("PasswordResetCode")
-                    .HasColumnType("varchar(255)")
-                    .IsRequired();
-            });
+            //builder.Property(x => x.UpdateDate)
+            //    .HasColumnName("UpdateDate")
+            //    .HasColumnType("timestamp(0)")
+            //    .IsRequired();
+
+            builder.OwnsOne(x => x.Email)
+            .OwnsOne(x => x.Verification)
+            .Ignore(x => x.IsActive);
+
+            builder.OwnsOne(x => x.Password)
+           .Property(x => x.Hash)
+           .HasColumnName("PasswordHash")
+           .IsRequired();
+
+            builder.OwnsOne(x => x.Password)
+                .Property(x => x.ResetCode)
+                .HasColumnName("PasswordResetCode")
+                .IsRequired();
         }
 
     }
