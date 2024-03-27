@@ -26,8 +26,8 @@ namespace MyContactsAPI.Models
         public string Username { get; set; }        
         public Email Email { get; set; }
         public Password Password { get; private set; } = null!;
-        public DateOnly RegisterDate { get; set; }
-        public DateOnly? UpdateDate { get; set; }
+        public DateTimeOffset RegisterDate { get; set; } = DateTimeOffset.UtcNow;
+        public DateTimeOffset? UpdateDate { get; set; } = null;
 
         public void ChangePassword(string newPassword)
         {

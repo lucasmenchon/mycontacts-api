@@ -62,7 +62,7 @@ namespace MyContactsAPI.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Busca o usuário pelo e-mail
+                // Busca o usuário pelo email
                 User user = await _userRepository.FindByEmailAsync(email);
 
                 if (user != null)
@@ -73,14 +73,14 @@ namespace MyContactsAPI.Controllers
                     // Constrói o link de redefinição de senha com o token JWT
                     var resetLink = Url.Action("ResetPassword", "Account", new { token }, Request.Scheme);
 
-                    // Constrói a mensagem de e-mail
+                    // Constrói a mensagem de email
                     string subject = "Redefinição de Senha";
                     string message = $"Para redefinir sua senha, clique no link a seguir: <a href='{resetLink}'>Redefinir Senha</a>";
 
-                    // Envia o e-mail com o link de redefinição de senha
+                    // Envia o email com o link de redefinição de senha
                     //await _email.SendVerificationEmailAsync(email, subject, message);
 
-                    return Ok("Um e-mail com instruções para redefinir sua senha foi enviado para o seu endereço de e-mail.");
+                    return Ok("Um email com instruções para redefinir sua senha foi enviado para o seu endereço de email.");
                 }
                 else
                 {

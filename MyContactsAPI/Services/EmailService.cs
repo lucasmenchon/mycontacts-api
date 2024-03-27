@@ -44,7 +44,7 @@ namespace MyContactsAPI.Services
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao enviar e-mail de verificação.", ex);
+                throw new Exception("Erro ao enviar email de verificação.", ex);
             }
         }
 

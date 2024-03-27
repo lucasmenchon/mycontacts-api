@@ -43,11 +43,11 @@ namespace MyContactsAPI.Repositories
             {
                 bool existingUser = await _context.Users.AsNoTracking().AnyAsync(u => u.Email.Address == createUserDto.Email);
                 if (existingUser)
-                    return new Response("Este e-mail já está em uso.", 400);
+                    return new Response("Este email já está em uso.", 400);
             }
             catch
             {
-                return new Response("Falha ao verificar E-mail cadastrado.", 500);
+                return new Response("Falha ao verificar email cadastrado.", 500);
             }
 
             try
@@ -70,7 +70,7 @@ namespace MyContactsAPI.Repositories
                 return new Response("Falha ao enviar código de verificação.", 500);
             }
 
-            return new Response("Cadastro realizado.", 200);
+            return new Response("Cadastro realizado com sucesso. Enviamos para seu email o link de ativação da sua conta.", 201);
         }
 
         public async Task<bool> DeleteUserAsync(int id)
@@ -105,7 +105,7 @@ namespace MyContactsAPI.Repositories
             existingUser.Name = userUpdate.Name;
             existingUser.Username = userUpdate.Username;
             existingUser.Email = userUpdate.Email;
-            existingUser.UpdateDate = DateOnly.FromDateTime(DateTime.UtcNow);
+            //existingUser.UpdateDate = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
 

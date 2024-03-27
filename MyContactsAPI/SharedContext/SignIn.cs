@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MyContactsAPI.Models
+namespace MyContactsAPI.SharedContext
 {
     public class SignIn
     {

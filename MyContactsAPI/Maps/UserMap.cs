@@ -38,25 +38,21 @@ namespace MyContactsAPI.Maps
            .OwnsOne(x => x.Verification)
            .Property(x => x.ExpiresAt)
            .HasColumnName("EmailVerificationExpiresAt")
-           .HasColumnType("timestamp(0)")
            .IsRequired(false);
 
             builder.OwnsOne(x => x.Email)
                 .OwnsOne(x => x.Verification)
                 .Property(x => x.VerifiedAt)
                 .HasColumnName("EmailVerificationVerifiedAt")
-                .HasColumnType("timestamp(0)")
                 .IsRequired(false);
 
-            //builder.Property(x => x.RegisterDate)
-            //    .HasColumnName("RegisterDate")
-            //    .HasColumnType("timestamp(0)")
-            //    .IsRequired();
+            builder.Property(x => x.RegisterDate)
+                .HasColumnName("RegisterDate")
+                .IsRequired();
 
-            //builder.Property(x => x.UpdateDate)
-            //    .HasColumnName("UpdateDate")
-            //    .HasColumnType("timestamp(0)")
-            //    .IsRequired();
+            builder.Property(x => x.UpdateDate)
+                .HasColumnName("UpdateDate")
+                .IsRequired(false);
 
             builder.OwnsOne(x => x.Email)
             .OwnsOne(x => x.Verification)

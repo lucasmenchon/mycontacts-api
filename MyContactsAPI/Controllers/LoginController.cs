@@ -2,6 +2,7 @@
 using MyContactsAPI.Interfaces;
 using MyContactsAPI.Models;
 using MyContactsAPI.Services;
+using MyContactsAPI.SharedContext;
 
 namespace MyContactsAPI.Controllers
 {

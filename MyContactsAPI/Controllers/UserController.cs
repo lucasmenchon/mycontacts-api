@@ -27,7 +27,7 @@ namespace MyContactsAPI.Controllers
             try
             {
                 var response = await _userRepository.CreateUserAsync(createUserDto);
-                return Ok(response.Message);
+                return Ok(response);
             }
             catch (Exception error)
             {

@@ -15,15 +15,15 @@ namespace MyContactsAPI.Models
         public Email(string address)
         {
             if (string.IsNullOrEmpty(address))
-                throw new Exception("E-mail inválido");
+                throw new Exception("Email inválido");
 
             Address = address.Trim().ToLower();
 
             if (Address.Length < 5)
-                throw new Exception("E-mail inválido");
+                throw new Exception("Email inválido");
 
             if (!EmailRegex().IsMatch(Address))
-                throw new Exception("E-mail inválido");
+                throw new Exception("Email inválido");
         }
 
         public string Address { get; }

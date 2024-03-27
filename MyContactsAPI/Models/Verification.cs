@@ -9,8 +9,8 @@ namespace MyContactsAPI.Models
         }
 
         public string Code { get; } = Guid.NewGuid().ToString("N")[..6].ToUpper();
-        public DateTime? ExpiresAt { get; private set; } =  DateTime.UtcNow.AddHours(2);      
-        public DateTime? VerifiedAt { get; private set; } = null;
+        public DateTimeOffset? ExpiresAt { get; private set; } = DateTimeOffset.UtcNow.AddHours(2);
+        public DateTimeOffset? VerifiedAt { get; private set; } = null;
         public bool IsActive => VerifiedAt != null && ExpiresAt == null;
 
         public void Verify(string code)
@@ -25,7 +25,7 @@ namespace MyContactsAPI.Models
                 throw new Exception("Código de verificação inválido");
 
             ExpiresAt = null;
-            VerifiedAt = DateTime.UtcNow;
+            VerifiedAt = DateTimeOffset.UtcNow;
         }
     }
 }
