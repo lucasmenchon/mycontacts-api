@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MyContactsAPI.Dtos.User;
 using MyContactsAPI.Interfaces;
-using MyContactsAPI.Models;
-using MyContactsAPI.Services;
-using MyContactsAPI.SharedContext;
+using MyContactsAPI.Models.UserModels;
 
 namespace MyContactsAPI.Controllers
 {
@@ -10,38 +9,27 @@ namespace MyContactsAPI.Controllers
     [Route("api/[controller]")]
     public class LoginController : Controller
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUserLoginService _loginService;
         private readonly IEmailService _email;
         private readonly IUserPasswordService _userPasswordService;
         private readonly IJwtTokenService _jwtTokenService;
 
-        public LoginController(IUserRepository userRepository, IEmailService email, IJwtTokenService jwtTokenService, IUserPasswordService userPasswordService)
+        public LoginController(IUserLoginService userLogin, IEmailService email, IJwtTokenService jwtTokenService, IUserPasswordService userPasswordService)
         {
-            _userRepository = userRepository;
+            _loginService = userLogin;
             _email = email;
             _jwtTokenService = jwtTokenService;
             _userPasswordService = userPasswordService;
         }
 
         [HttpPost]
-        public async Task<IActionResult> LoginAccess(SignIn sigIn)
+        public async Task<IActionResult> LoginAccess(UserSignInDto userSigIn)
         {
             if (ModelState.IsValid)
             {
-                User user = await _userRepository.FindByEmailAsync(sigIn.Email);
+                var response = await _loginService.UserSigIn(userSigIn);
 
-                if (user != null && await _userPasswordService.CheckPasswordAsync(user, sigIn.Password))
-                {
-                    //await _session.CreateSessionAsync(user);
-                    string token = _jwtTokenService.GenerateToken(user);
-
-                    return Ok($"Bearer {token}");
-                    //return Ok(new { token });
-                }
-                else
-                {
-                    return Unauthorized("Nome de usuário ou senha inválidos.");
-                }
+                return Ok(response);
             }
             else
             {

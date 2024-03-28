@@ -1,4 +1,5 @@
-﻿using MyContactsAPI.SharedContext;
+﻿using MyContactsAPI.Models.EmailModels;
+using MyContactsAPI.SharedContext;
 using System.Text.RegularExpressions;
 
 namespace MyContactsAPI.Models

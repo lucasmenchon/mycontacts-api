@@ -1,6 +1,6 @@
-﻿namespace MyContactsAPI.Models
+﻿namespace MyContactsAPI.Models.UserModels
 {
-    public class Response : MyContactsAPI.SharedContext.Response
+    public class Response : SharedContext.Response
     {
         protected Response()
         {

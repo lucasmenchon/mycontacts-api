@@ -1,6 +1,6 @@
 ﻿using MyContactsAPI.SharedContext;
 
-namespace MyContactsAPI.Models
+namespace MyContactsAPI.Models.EmailModels
 {
     public class Verification : ValueObject
     {

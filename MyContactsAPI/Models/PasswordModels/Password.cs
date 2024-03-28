@@ -3,7 +3,7 @@ using MyContactsAPI.Extensions;
 using MyContactsAPI.SharedContext;
 using System.Security.Cryptography;
 
-namespace MyContactsAPI.Models
+namespace MyContactsAPI.Models.PasswordModels
 {
     public class Password : ValueObject
     {
@@ -34,7 +34,7 @@ namespace MyContactsAPI.Models
             bool includeSpecialChars = true,
             bool upperCase = false)
         {
-            var chars = includeSpecialChars ? (Valid + Special) : Valid;
+            var chars = includeSpecialChars ? Valid + Special : Valid;
             var startRandom = upperCase ? 26 : 0;
             var index = 0;
             var res = new char[length];

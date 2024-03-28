@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyContactsAPI.Interfaces;
-using MyContactsAPI.Models;
+using MyContactsAPI.Models.UserModels;
 using MyContactsAPI.Services;
 using MyContactsAPI.ViewModels;
 
@@ -28,7 +28,7 @@ namespace MyContactsAPI.Controllers
         {
             try
             {
-                Guid userId = _jwtTokenService.ValidateJwtToken(passwordReset.Token);
+                Guid userId = new Guid();
 
                 if (!ModelState.IsValid)
                 {
@@ -63,7 +63,7 @@ namespace MyContactsAPI.Controllers
             if (ModelState.IsValid)
             {
                 // Busca o usuário pelo email
-                User user = await _userRepository.FindByEmailAsync(email);
+                User user = new User("");
 
                 if (user != null)
                 {

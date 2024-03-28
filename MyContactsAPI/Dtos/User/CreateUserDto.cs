@@ -1,4 +1,4 @@
-﻿namespace MyContactsAPI.Dtos
+﻿namespace MyContactsAPI.Dtos.User
 {
     public record CreateUserDto
     {

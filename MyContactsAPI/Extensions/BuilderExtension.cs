@@ -54,6 +54,7 @@ namespace MyContactsAPI.Extensions
                     x.TokenValidationParameters = new TokenValidationParameters
                     {
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.Secrets.JwtPrivateKey)),
+                        ValidateIssuerSigningKey = true,
                         ValidateIssuer = false,
                         ValidateAudience = false
                     };

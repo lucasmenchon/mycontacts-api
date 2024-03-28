@@ -20,12 +20,15 @@ builder.Services.TryAddScoped<IContactRepository, ContactRepository>();
 builder.Services.TryAddScoped<IUserRepository, UserRepository>();
 builder.Services.TryAddScoped<IUserPasswordService, UserPasswordService>();
 builder.Services.TryAddScoped<IEmailService, EmailService>();
+builder.Services.TryAddScoped<IUserLoginService, UserLoginService>();
 
 builder.Services.AddTransient<IJwtTokenService, JwtTokenService>();
 
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+
+app.UseMiddleware<JwtValidationMiddleware>();
 
 app.UseAuthentication();
 

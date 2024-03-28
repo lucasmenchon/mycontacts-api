@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using MyContactsAPI.Models;
+using MyContactsAPI.Models.UserModels;
 
 namespace ContactsManage.Data
 {

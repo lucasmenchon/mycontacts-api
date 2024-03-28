@@ -1,19 +1,18 @@
 ﻿using ContactsManage.Data;
 using MyContactsAPI.Helper;
 using MyContactsAPI.Interfaces;
-using MyContactsAPI.Models;
+using MyContactsAPI.Models.PasswordModels;
+using MyContactsAPI.Models.UserModels;
 using MyContactsAPI.ViewModels;
 
 namespace MyContactsAPI.Services
 {
     public class UserPasswordService : IUserPasswordService
     {
-        private readonly IUserRepository _userRepository;
         private readonly DataContext _context;
 
-        public UserPasswordService(IUserRepository userRepository, DataContext dataContext)
+        public UserPasswordService( DataContext dataContext)
         {
-            _userRepository = userRepository;
             this._context = dataContext;
         }
 

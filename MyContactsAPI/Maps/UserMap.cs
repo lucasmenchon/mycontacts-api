@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MyContactsAPI.Models;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using MyContactsAPI.Models.UserModels;
 
 namespace MyContactsAPI.Maps
 {

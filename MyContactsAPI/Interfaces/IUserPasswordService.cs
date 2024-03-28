@@ -1,4 +1,4 @@
-﻿using MyContactsAPI.Models;
+﻿using MyContactsAPI.Models.UserModels;
 using MyContactsAPI.ViewModels;
 
 namespace MyContactsAPI.Interfaces

@@ -1,14 +1,13 @@
-﻿using MyContactsAPI.Dtos;
-using MyContactsAPI.Models;
-using MyContactsAPI.ViewModels;
+﻿using MyContactsAPI.Dtos.User;
+using MyContactsAPI.Models.UserModels;
 
 namespace MyContactsAPI.Interfaces
 {
     public interface IUserRepository
     {
-        Task<User> FindByEmailAsync(string email);
+        Task<User?> GetUserByEmailAsync(string email);
         Task<Response> CreateUserAsync(CreateUserDto createUserDto);
-        Task<User> UpdateUserAsync(int id, UpdateUserViewModel userUpdate);
+        Task<Response> UpdateUserAsync(UpdateUserDto userUpdate);        
         Task<bool> DeleteUserAsync(int id);
     }
 }

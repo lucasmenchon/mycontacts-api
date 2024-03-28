@@ -1,10 +1,10 @@
-﻿using MyContactsAPI.Models;
+﻿using MyContactsAPI.Models.UserModels;
 
 namespace MyContactsAPI.Interfaces
 {
     public interface IJwtTokenService
     {
         string GenerateToken(User user);
-        Guid ValidateJwtToken(string authorizationHeader);
+        //Guid ValidateJwtToken(string authorizationHeader);
     }
 }

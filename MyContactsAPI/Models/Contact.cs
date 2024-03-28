@@ -1,4 +1,6 @@
-﻿namespace MyContactsAPI.Models
+﻿using MyContactsAPI.Models.UserModels;
+
+namespace MyContactsAPI.Models
 {
     public class Contact
     {

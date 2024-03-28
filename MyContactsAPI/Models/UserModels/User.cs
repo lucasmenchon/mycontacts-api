@@ -1,6 +1,6 @@
-﻿using System.Text.Json.Serialization;
+﻿using MyContactsAPI.Models.PasswordModels;
 
-namespace MyContactsAPI.Models
+namespace MyContactsAPI.Models.UserModels
 {
     public class User : Entity
     {
@@ -23,7 +23,7 @@ namespace MyContactsAPI.Models
         }
 
         public string Name { get; set; }
-        public string Username { get; set; }        
+        public string Username { get; set; }
         public Email Email { get; set; }
         public Password Password { get; private set; } = null!;
         public DateTimeOffset RegisterDate { get; set; } = DateTimeOffset.UtcNow;
@@ -32,6 +32,6 @@ namespace MyContactsAPI.Models
         public void ChangePassword(string newPassword)
         {
             Password = new Password(newPassword);
-        }        
+        }
     }
 }
