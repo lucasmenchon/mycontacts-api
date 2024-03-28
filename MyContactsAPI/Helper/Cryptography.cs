@@ -25,14 +25,6 @@ namespace MyContactsAPI.Helper
             }
             
             return stringHexa.ToString();
-        }
-
-        public static string GenerateJwtSecretKey()
-        {
-            var rng = new RNGCryptoServiceProvider();
-            var keyBytes = new byte[64]; // 512 bits é uma boa prática para chaves simétricas
-            rng.GetBytes(keyBytes);
-            return Convert.ToBase64String(keyBytes);
-        }
+        }        
     }
 }

@@ -5,6 +5,7 @@ using MyContactsAPI.Repositories;
 using MyContactsAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+var config = builder.Configuration;
 
 builder.AddConfiguration();
 builder.AddDatabase();
@@ -15,24 +16,13 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
 builder.Services.TryAddScoped<IContactRepository, ContactRepository>();
 builder.Services.TryAddScoped<IUserRepository, UserRepository>();
 builder.Services.TryAddScoped<IUserPasswordService, UserPasswordService>();
 builder.Services.TryAddScoped<IEmailService, EmailService>();
 builder.Services.TryAddScoped<IUserLoginService, UserLoginService>();
 
-builder.Services.AddTransient<IJwtTokenService, JwtTokenService>();
-
-builder.Services.AddAuthorization();
-
 var app = builder.Build();
-
-app.UseMiddleware<JwtValidationMiddleware>();
-
-app.UseAuthentication();
-
-app.UseAuthorization();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -42,6 +32,14 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseStaticFiles();
+
+app.UseRouting();
+
+app.UseAuthentication();
+
+app.UseAuthorization();
 
 app.MapControllers();
 

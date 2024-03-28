@@ -4,6 +4,8 @@ using System.Text;
 using System;
 using ContactsManage.Data;
 using Microsoft.EntityFrameworkCore;
+using MyContactsAPI.Models.UserModels;
+using Microsoft.AspNetCore.Identity;
 
 namespace MyContactsAPI.Extensions
 {
@@ -34,8 +36,8 @@ namespace MyContactsAPI.Extensions
 
         public static void AddDatabase(this WebApplicationBuilder builder)
         {
-            builder.Services.AddDbContext<DataContext>(x =>
-                x.UseNpgsql(
+            builder.Services.AddDbContext<DataContext>(options =>
+                options.UseNpgsql(
                     Configuration.Database.ConnectionString,
                     b => b.MigrationsAssembly("MyContactsAPI")));
         }
@@ -47,6 +49,7 @@ namespace MyContactsAPI.Extensions
                 {
                     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                     x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
                 }).AddJwtBearer(x =>
                 {
                     x.RequireHttpsMetadata = false;
@@ -54,12 +57,13 @@ namespace MyContactsAPI.Extensions
                     x.TokenValidationParameters = new TokenValidationParameters
                     {
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.Secrets.JwtPrivateKey)),
-                        ValidateIssuerSigningKey = true,
                         ValidateIssuer = false,
-                        ValidateAudience = false
+                        ValidateAudience = false,                        
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true
                     };
                 });
-            builder.Services.AddAuthorization();
+            builder.Services.AddAuthorization();            
         }        
     }
 }

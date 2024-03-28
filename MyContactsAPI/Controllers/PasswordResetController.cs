@@ -12,14 +12,12 @@ namespace MyContactsAPI.Controllers
     {
         private readonly IUserRepository _userRepository;
         private readonly IUserPasswordService _userPasswordService;
-        private readonly JwtTokenService _jwtTokenService;
         private readonly IEmailService _email;
 
-        public PasswordResetController(IUserRepository userRepository, IUserPasswordService userPasswordService, JwtTokenService jwtTokenService, IEmailService email)
+        public PasswordResetController(IUserRepository userRepository, IUserPasswordService userPasswordService, IEmailService email)
         {
             _userRepository = userRepository;
             _userPasswordService = userPasswordService;
-            _jwtTokenService = jwtTokenService;
             _email = email;
         }
 
@@ -28,17 +26,6 @@ namespace MyContactsAPI.Controllers
         {
             try
             {
-                Guid userId = new Guid();
-
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                // Obtém o usuário logado
-                //UserViewModel userLogged = _session.FindUserSession();
-                UserViewModel userLogged = new UserViewModel() { Id = userId };
-                passwordReset.Id = userId;
                 // Verifica se a senha atual está correta
                 bool isPasswordCorrect = await _userPasswordService.CheckChangedPasswordAsync(userLogged, passwordReset.OldPassword);
                 if (!isPasswordCorrect)
@@ -68,7 +55,7 @@ namespace MyContactsAPI.Controllers
                 if (user != null)
                 {
                     // Gera o token JWT com prazo de validade de 1 hora
-                    var token = _jwtTokenService.GenerateToken(user);
+                    var token = JwtTokenService.GenerateToken(user);
 
                     // Constrói o link de redefinição de senha com o token JWT
                     var resetLink = Url.Action("ResetPassword", "Account", new { token }, Request.Scheme);

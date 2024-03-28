@@ -2,9 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using MyContactsAPI.Dtos.User;
 using MyContactsAPI.Interfaces;
-using MyContactsAPI.Models;
-using System.Security.Claims;
-using System.Threading;
 
 namespace MyContactsAPI.Controllers
 {
@@ -13,12 +10,10 @@ namespace MyContactsAPI.Controllers
     public class UserController : Controller
     {
         private readonly IUserRepository _userRepository;
-        private readonly IJwtTokenService _jwtTokenService;
 
-        public UserController(IJwtTokenService jwtTokenService, IUserRepository userRepository)
+        public UserController(IUserRepository userRepository)
         {
             _userRepository = userRepository;
-            _jwtTokenService = jwtTokenService;
         }
 
         [HttpPost("RegisterUser")]
@@ -34,16 +29,14 @@ namespace MyContactsAPI.Controllers
                 return StatusCode(500, $"Ops!! Não foi possível cadastrar o usuário, tente novamente ou entre em contato com o suporte, detalhes do erro: {error.Message}");
             }
         }
-        
-        [HttpPut("UpdateUser")]
-        [Authorize]
-        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserDto userUpdate)
+
+        [HttpPut("UpdateUser"), Authorize]
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserDto userUpdateDto)
         {
             try
             {
-                // Agora você pode usar o userId para identificar o usuário autenticado
-                var response = await _userRepository.UpdateUserAsync(userUpdate);
-                return NoContent();
+                var response = await _userRepository.UpdateUserAsync(userUpdateDto);
+                return Ok(response);
             }
             catch (Exception error)
             {
@@ -51,14 +44,13 @@ namespace MyContactsAPI.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpDelete("DeleteUser"), Authorize]
         public async Task<IActionResult> DeleteUser()
         {
             try
             {
-                // Seu código para excluir o usuário
-
-                return NoContent();
+                var response = await _userRepository.DeleteUserAsync();
+                return Ok(response);
             }
             catch (Exception error)
             {

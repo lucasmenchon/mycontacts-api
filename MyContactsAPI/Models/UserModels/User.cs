@@ -6,6 +6,10 @@ namespace MyContactsAPI.Models.UserModels
     {
         protected User()
         {
+            Name = string.Empty;
+            Username = string.Empty;
+            Email = new Email(string.Empty);
+            Password = new Password(string.Empty);
         }
 
         public User(string name, string username, Email email, Password password)
@@ -18,6 +22,8 @@ namespace MyContactsAPI.Models.UserModels
 
         public User(string email, string? password = null)
         {
+            Name = string.Empty;
+            Username = string.Empty;
             Email = email;
             Password = new Password(password);
         }

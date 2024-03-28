@@ -11,12 +11,12 @@ namespace MyContactsAPI.Services
     {
         private readonly DataContext _context;
 
-        public UserPasswordService( DataContext dataContext)
+        public UserPasswordService(DataContext dataContext)
         {
             this._context = dataContext;
         }
 
-        public async Task<bool> CheckChangedPasswordAsync(UserViewModel userLogged, string password)
+        public async Task<bool> ChangeUserPassword(UserViewModel userLogged, string password)
         {
             if (userLogged == null || string.IsNullOrEmpty(password))
             {

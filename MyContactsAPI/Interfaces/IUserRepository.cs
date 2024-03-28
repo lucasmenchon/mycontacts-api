@@ -7,7 +7,7 @@ namespace MyContactsAPI.Interfaces
     {
         Task<User?> GetUserByEmailAsync(string email);
         Task<Response> CreateUserAsync(CreateUserDto createUserDto);
-        Task<Response> UpdateUserAsync(UpdateUserDto userUpdate);        
-        Task<bool> DeleteUserAsync(int id);
+        Task<Response> UpdateUserAsync(UpdateUserDto userUpdateDto);        
+        Task<Response> DeleteUserAsync();
     }
 }

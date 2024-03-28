@@ -11,30 +11,25 @@ namespace MyContactsAPI.Services
     public class UserLoginService : IUserLoginService
     {
         private readonly IUserRepository _userRepository;
-        private readonly IJwtTokenService _jwtTokenService;
 
-        public UserLoginService(IJwtTokenService jwtTokenService, IUserRepository userRepository)
+        public UserLoginService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
-            _jwtTokenService = jwtTokenService;
         }
 
         public async Task<LoginResponse> UserSigIn(UserSignInDto userSignIn)
         {
             try
             {
-                // Verifique se o email fornecido é válido
                 try
                 {
-                    // Instancie um objeto Email com o endereço de email fornecido
                     var email = new Email(userSignIn.Email);
                 }
                 catch
                 {
-                    return new LoginResponse($"Email inválido.", 400); // Retorna uma resposta de erro 400 Bad Request se o email não for válido
+                    return new LoginResponse($"Email inválido.", 400);
                 }
 
-                // Se o email for válido, continue com o restante da lógica de login
                 User? user = await _userRepository.GetUserByEmailAsync(userSignIn.Email);
                 if (user is null)
                     return new LoginResponse("Perfil não encontrado", 404);
@@ -54,14 +49,10 @@ namespace MyContactsAPI.Services
 
                 try
                 {
-
-                    var token = _jwtTokenService.GenerateToken(user);
-
                     var data = new Models.LoginModels.ResponseData
                     {
-                        Token = token
+                        Token = JwtTokenService.GenerateToken(user)
                     };
-
 
                     return new LoginResponse(string.Empty, data);
                 }

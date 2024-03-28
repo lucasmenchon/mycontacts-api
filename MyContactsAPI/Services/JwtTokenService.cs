@@ -1,4 +1,6 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using ContactsManage.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using MyContactsAPI.Extensions;
 using MyContactsAPI.Interfaces;
 using MyContactsAPI.Models.UserModels;
@@ -10,16 +12,23 @@ using System.Text;
 
 namespace MyContactsAPI.Services
 {
-    public class JwtTokenService : IJwtTokenService
+    public class JwtTokenService
     {
         private readonly IConfiguration _configuration;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public JwtTokenService(IConfiguration configuration)
+        public JwtTokenService()
         {
-            _configuration = configuration;
+
         }
 
-        public string GenerateToken(User user)
+        public JwtTokenService(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+        {
+            _configuration = configuration;
+            _httpContextAccessor = httpContextAccessor;
+        }
+
+        public static string GenerateToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(Configuration.Secrets.JwtPrivateKey);            
@@ -27,12 +36,10 @@ namespace MyContactsAPI.Services
             new SymmetricSecurityKey(key),
             SecurityAlgorithms.HmacSha256Signature);
 
-
-
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 SigningCredentials = credentials,
-                Expires = DateTime.UtcNow.AddSeconds(1),
+                Expires = DateTime.UtcNow.AddHours(2),
                 Subject = CreateIdentity(user)
             };
 
@@ -48,8 +55,31 @@ namespace MyContactsAPI.Services
             claimIdentity.AddClaim(new Claim(ClaimTypes.GivenName, user.Name));
             claimIdentity.AddClaim(new Claim(ClaimTypes.Email, user.Email));
 
-
             return claimIdentity;
         }
+
+        public async Task<User> GetUserFromJwtTokenAsync(DataContext dataContext)
+        {
+            if (_httpContextAccessor.HttpContext == null)
+            {
+                throw new InvalidOperationException("O contexto HTTP não está disponível.");
+            }
+
+            var userIdClaim = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userIdClaim == null)
+            {
+                throw new InvalidOperationException("ID do usuário não encontrado no token JWT.");
+            }
+
+            var user = await dataContext.Users.FindAsync(Guid.Parse(userIdClaim));
+
+            if (user == null)
+            {
+                throw new InvalidOperationException("Usuário não encontrado.");
+            }
+
+            return user;
+        }
+
     }
 }
