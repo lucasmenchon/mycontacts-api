@@ -1,4 +1,5 @@
 ﻿using MyContactsAPI.Models.PasswordModels;
+using MyContactsAPI.Models.EmailModels;
 
 namespace MyContactsAPI.Models.UserModels
 {
@@ -6,10 +7,6 @@ namespace MyContactsAPI.Models.UserModels
     {
         protected User()
         {
-            Name = string.Empty;
-            Username = string.Empty;
-            Email = new Email(string.Empty);
-            Password = new Password(string.Empty);
         }
 
         public User(string name, string username, Email email, Password password)
@@ -28,9 +25,9 @@ namespace MyContactsAPI.Models.UserModels
             Password = new Password(password);
         }
 
-        public string Name { get; set; }
-        public string Username { get; set; }
-        public Email Email { get; set; }
+        public string Name { get; set; } = null!;
+        public string Username { get; set; } = null!;
+        public Email Email { get; set; } = null!;
         public Password Password { get; private set; } = null!;
         public DateTimeOffset RegisterDate { get; set; } = DateTimeOffset.UtcNow;
         public DateTimeOffset? UpdateDate { get; set; } = null;

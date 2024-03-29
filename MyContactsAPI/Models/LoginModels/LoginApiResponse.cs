@@ -1,12 +1,14 @@
-﻿namespace MyContactsAPI.Models.LoginModels
+﻿using MyContactsAPI.SharedContext;
+
+namespace MyContactsAPI.Models.LoginModels
 {
-    public class LoginResponse : SharedContext.Response
+    public class LoginApiResponse : Response
     {
-        protected LoginResponse()
+        protected LoginApiResponse()
         {
         }
 
-        public LoginResponse(
+        public LoginApiResponse(
             string message,
             int status)
         {
@@ -14,7 +16,7 @@
             Status = status;
         }
 
-        public LoginResponse(string message, ResponseData data)
+        public LoginApiResponse(string message, ResponseData data)
         {
             Message = message;
             Status = 201;

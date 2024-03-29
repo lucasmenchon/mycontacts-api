@@ -29,8 +29,8 @@ namespace MyContactsAPI.Controllers
                 return StatusCode(500, $"Ops!! Não foi possível cadastrar o usuário, tente novamente ou entre em contato com o suporte, detalhes do erro: {error.Message}");
             }
         }
-
-        [HttpPut("UpdateUser"), Authorize]
+        [Authorize]
+        [HttpPut("UpdateUser")]
         public async Task<IActionResult> UpdateUser([FromBody] UpdateUserDto userUpdateDto)
         {
             try
@@ -44,7 +44,8 @@ namespace MyContactsAPI.Controllers
             }
         }
 
-        [HttpDelete("DeleteUser"), Authorize]
+        [Authorize]
+        [HttpDelete("DeleteUser")]
         public async Task<IActionResult> DeleteUser()
         {
             try

@@ -24,24 +24,25 @@ namespace MyContactsAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> ChangePassword(PasswordResetViewModel passwordReset)
         {
-            try
-            {
-                // Verifica se a senha atual está correta
-                bool isPasswordCorrect = await _userPasswordService.CheckChangedPasswordAsync(userLogged, passwordReset.OldPassword);
-                if (!isPasswordCorrect)
-                {
-                    return BadRequest("A senha atual está incorreta.");
-                }
+            //try
+            //{
+            //    // Verifica se a senha atual está correta
+            //    bool isPasswordCorrect = await _userPasswordService.CheckPasswordAsync(userLogged, passwordReset.OldPassword);
+            //    if (!isPasswordCorrect)
+            //    {
+            //        return BadRequest("A senha atual está incorreta.");
+            //    }
 
-                // Reseta a senha do usuário
-                await _userPasswordService.ResetPasswordAsync(passwordReset);
+            //    // Reseta a senha do usuário
+            //    await _userPasswordService.ResetPasswordAsync(passwordReset);
 
-                return Ok();
-            }
-            catch (Exception error)
-            {
-                return StatusCode(500, $"Ops!! Não conseguimos alterar sua senha. Detalhe do erro: {error.Message}");
-            }
+            //    return Ok();
+            //}
+            //catch (Exception error)
+            //{
+            //    return StatusCode(500, $"Ops!! Não conseguimos alterar sua senha. Detalhe do erro: {error.Message}");
+            //}
+            return Ok();
         }
 
         [HttpPost("SendPasswordResetEmail")]

@@ -5,6 +5,6 @@ namespace MyContactsAPI.Interfaces
 {
     public interface IUserLoginService
     {
-        Task<LoginResponse> UserSigIn(UserSignInDto userSignIn);
+        Task<LoginApiResponse> UserSigIn(UserSignInDto userSignIn);
     }
 }

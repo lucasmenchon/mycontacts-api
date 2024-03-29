@@ -14,19 +14,12 @@ namespace MyContactsAPI.Services
 {
     public class JwtTokenService
     {
-        private readonly IConfiguration _configuration;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public JwtTokenService()
+        public JwtTokenService(IHttpContextAccessor httpContextAccessor)
         {
-
-        }
-
-        public JwtTokenService(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
-        {
-            _configuration = configuration;
             _httpContextAccessor = httpContextAccessor;
-        }
+        }       
 
         public static string GenerateToken(User user)
         {

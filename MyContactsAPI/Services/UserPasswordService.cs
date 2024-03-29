@@ -16,26 +16,26 @@ namespace MyContactsAPI.Services
             this._context = dataContext;
         }
 
-        public async Task<bool> ChangeUserPassword(UserViewModel userLogged, string password)
+        public async Task<UserPasswordResponse> ChangeUserPassword(UserViewModel userLogged, string password)
         {
-            if (userLogged == null || string.IsNullOrEmpty(password))
-            {
-                return await Task.FromResult(false);
-            }
+            //if (userLogged == null || string.IsNullOrEmpty(password))
+            //{
+            //    return await Task.FromResult(false);
+            //}
 
-            // Busca o usuário pelo ID
-            User user = await _context.Users.FindAsync(userLogged.Id);
+            //// Busca o usuário pelo ID
+            //User user = await _context.Users.FindAsync(userLogged.Id);
 
-            // Verifica se o usuário foi encontrado
-            if (user == null)
-            {
-                return await Task.FromResult(false);
-            }
+            //// Verifica se o usuário foi encontrado
+            //if (user == null)
+            //{
+            //    return await Task.FromResult(false);
+            //}
 
-            // Verifica se a senha fornecida corresponde à senha do usuário
-            bool passwordMatch = user.Password.Challenge(password);
+            //// Verifica se a senha fornecida corresponde à senha do usuário
+            //bool passwordMatch = user.Password.Challenge(password);
 
-            return await Task.FromResult(passwordMatch);
+            return null; //await Task.FromResult(passwordMatch);
         }
 
 
@@ -91,10 +91,6 @@ namespace MyContactsAPI.Services
             await _context.SaveChangesAsync();
 
             return user;
-        }
-
-
-
-
+        }        
     }
 }

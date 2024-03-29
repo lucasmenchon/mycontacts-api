@@ -19,16 +19,8 @@ namespace MyContactsAPI.Controllers
         [HttpPost, Route("Login")]
         public async Task<IActionResult> LoginAccess(UserSignInDto userSigIn)
         {
-            if (ModelState.IsValid)
-            {
-                var response = await _loginService.UserSigIn(userSigIn);
-
-                return Ok(response);
-            }
-            else
-            {
-                return BadRequest(ModelState);
-            }
+            var response = await _loginService.UserSigIn(userSigIn);
+            return Ok(response);
         }
     }
 }

@@ -1,12 +1,14 @@
-﻿namespace MyContactsAPI.Models.UserModels
+﻿using MyContactsAPI.SharedContext;
+
+namespace MyContactsAPI.Models.UserModels
 {
-    public class Response : SharedContext.Response
+    public class UserApiResponse : Response
     {
-        protected Response()
+        protected UserApiResponse()
         {
         }
 
-        public Response(
+        public UserApiResponse(
             string message,
             int status)
         {
@@ -14,7 +16,7 @@
             Status = status;
         }
 
-        public Response(string message, ResponseData data)
+        public UserApiResponse(string message, ResponseData data)
         {
             Message = message;
             Status = 201;

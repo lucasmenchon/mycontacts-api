@@ -52,7 +52,7 @@ namespace MyContactsAPI.Migrations
                     b.ToTable("Contacts");
                 });
 
-            modelBuilder.Entity("MyContactsAPI.Models.User", b =>
+            modelBuilder.Entity("MyContactsAPI.Models.UserModels.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -85,16 +85,16 @@ namespace MyContactsAPI.Migrations
 
             modelBuilder.Entity("MyContactsAPI.Models.Contact", b =>
                 {
-                    b.HasOne("MyContactsAPI.Models.User", "User")
+                    b.HasOne("MyContactsAPI.Models.UserModels.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("MyContactsAPI.Models.User", b =>
+            modelBuilder.Entity("MyContactsAPI.Models.UserModels.User", b =>
                 {
-                    b.OwnsOne("MyContactsAPI.Models.Email", "Email", b1 =>
+                    b.OwnsOne("MyContactsAPI.Models.EmailModels.Email", "Email", b1 =>
                         {
                             b1.Property<Guid>("UserId")
                                 .HasColumnType("uuid");
@@ -111,7 +111,7 @@ namespace MyContactsAPI.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("UserId");
 
-                            b1.OwnsOne("MyContactsAPI.Models.Verification", "Verification", b2 =>
+                            b1.OwnsOne("MyContactsAPI.Models.EmailModels.Verification", "Verification", b2 =>
                                 {
                                     b2.Property<Guid>("EmailUserId")
                                         .HasColumnType("uuid");
@@ -141,7 +141,7 @@ namespace MyContactsAPI.Migrations
                                 .IsRequired();
                         });
 
-                    b.OwnsOne("MyContactsAPI.Models.Password", "Password", b1 =>
+                    b.OwnsOne("MyContactsAPI.Models.PasswordModels.Password", "Password", b1 =>
                         {
                             b1.Property<Guid>("UserId")
                                 .HasColumnType("uuid");

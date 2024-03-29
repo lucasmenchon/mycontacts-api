@@ -10,6 +10,7 @@ using System.Threading;
 using System.Security.Claims;
 using MyContactsAPI.Services;
 using Microsoft.AspNetCore.Http;
+using MyContactsAPI.Models.EmailModels;
 
 namespace MyContactsAPI.Repositories
 {
@@ -17,23 +18,21 @@ namespace MyContactsAPI.Repositories
     {
         private readonly DataContext _context;
         private readonly IEmailService _emailService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserRepository(DataContext dataContext, IEmailService email, IHttpContextAccessor httpContextAccessor)
+        public UserRepository(DataContext dataContext, IEmailService email)
         {
             this._context = dataContext;
             _emailService = email;
-            _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<Response> CreateUserAsync(CreateUserDto createUserDto)
+        public async Task<UserApiResponse> CreateUserAsync(CreateUserDto createUserDto)
         {
             try
             {
                 var email = new Email(createUserDto.Email);
                 bool existingUser = await _context.Users.AsNoTracking().AnyAsync(u => u.Email.Address == createUserDto.Email);
                 if (existingUser)
-                    return new Response("Este email já está em uso.", 400);
+                    return new UserApiResponse("Este email já está em uso.", 400);
 
                 var password = new Password(createUserDto.Password);
                 var user = new User(createUserDto.Name, createUserDto.Username, email, password);
@@ -49,40 +48,40 @@ namespace MyContactsAPI.Repositories
 
                         await transaction.CommitAsync();
 
-                        return new Response("Cadastro realizado com sucesso. Enviamos para seu email o link de ativação da conta.", 201);
+                        return new UserApiResponse("Cadastro realizado com sucesso. Enviamos para seu email o link de ativação da conta.", 201);
                     }
                     catch
                     {
                         await transaction.RollbackAsync();
-                        return new Response("Falha no cadastro.", 500);
+                        return new UserApiResponse("Falha no cadastro.", 500);
                     }
                 }
             }
             catch
             {
-                return new Response("Falha ao criar usuário.", 500);
+                return new UserApiResponse("Falha ao criar usuário.", 500);
             }
         }
 
-        public async Task<Response> DeleteUserAsync()
+        public async Task<UserApiResponse> DeleteUserAsync()
         {
             try
             {
-                var userToDelete = await new JwtTokenService().GetUserFromJwtTokenAsync(_context);
+                var userToDelete = await new JwtTokenService(new HttpContextAccessor()).GetUserFromJwtTokenAsync(_context);
 
                 if (userToDelete == null)
                 {
-                    return new Response("Usuário não encontrado.", 404);
+                    return new UserApiResponse("Usuário não encontrado.", 404);
                 }
 
                 _context.Users.Remove(userToDelete);
                 await _context.SaveChangesAsync();
 
-                return new Response("Usuário excluído com sucesso.", 200);
+                return new UserApiResponse("Usuário excluído com sucesso.", 200);
             }
             catch
             {
-                return new Response("Falha ao excluir usuário.", 500);
+                return new UserApiResponse("Falha ao excluir usuário.", 500);
             }
         }
 
@@ -91,15 +90,15 @@ namespace MyContactsAPI.Repositories
             return await _context.Users.AsNoTracking().FirstOrDefaultAsync(user => user.Email.Address == email);
         }
 
-        public async Task<Response> UpdateUserAsync(UpdateUserDto userUpdateDto)
+        public async Task<UserApiResponse> UpdateUserAsync(UpdateUserDto userUpdateDto)
         {
             try
             {
-                var userToUpdate = await new JwtTokenService().GetUserFromJwtTokenAsync(_context);
+                var userToUpdate = await new JwtTokenService(new HttpContextAccessor()).GetUserFromJwtTokenAsync(_context);
 
                 if (userToUpdate == null)
                 {
-                    return new Response("Usuário não encontrado.", 404);
+                    return new UserApiResponse("Usuário não encontrado.", 404);
                 }
 
                 userToUpdate.Name = userUpdateDto.Name;
@@ -108,12 +107,12 @@ namespace MyContactsAPI.Repositories
 
                 await _context.SaveChangesAsync();
 
-                return new Response("Usuário atualizado com sucesso.", 200);
+                return new UserApiResponse("Usuário atualizado com sucesso.", 200);
             }
             catch
             {
-                return new Response("Falha ao atualizar usuário.", 500);
+                return new UserApiResponse("Falha ao atualizar usuário.", 500);
             }
-        }
+        }        
     }
 }

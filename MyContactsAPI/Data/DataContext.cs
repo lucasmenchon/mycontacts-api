@@ -26,7 +26,7 @@ namespace ContactsManage.Data
         {
             public DataContext CreateDbContext(string[] args)
             {
-                var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+                string environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
                 string environmentSuffix = environmentName == "Development" ? ".Development" : "";
                 var configuration = new ConfigurationBuilder()
                     .AddJsonFile($"appsettings{environmentSuffix}.json")

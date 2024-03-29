@@ -1,8 +1,7 @@
-﻿using MyContactsAPI.Models.EmailModels;
-using MyContactsAPI.SharedContext;
+﻿using MyContactsAPI.SharedContext;
 using System.Text.RegularExpressions;
 
-namespace MyContactsAPI.Models
+namespace MyContactsAPI.Models.EmailModels
 {
     public partial class Email : ValueObject
     {
