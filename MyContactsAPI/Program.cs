@@ -1,8 +1,11 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
 using MyContactsAPI.Extensions;
 using MyContactsAPI.Interfaces;
 using MyContactsAPI.Repositories;
 using MyContactsAPI.Services;
+using MyContactsAPI.Swagger;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
@@ -21,6 +24,7 @@ builder.Services.TryAddScoped<IUserRepository, UserRepository>();
 builder.Services.TryAddScoped<IUserPasswordService, UserPasswordService>();
 builder.Services.TryAddScoped<IEmailService, EmailService>();
 builder.Services.TryAddScoped<IUserLoginService, UserLoginService>();
+builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 
 var app = builder.Build();
 

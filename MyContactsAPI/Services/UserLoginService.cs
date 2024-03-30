@@ -6,6 +6,7 @@ using MyContactsAPI.Models;
 using MyContactsAPI.Models.EmailModels;
 using MyContactsAPI.Models.LoginModels;
 using MyContactsAPI.Models.UserModels;
+using MyContactsAPI.SharedContext;
 
 namespace MyContactsAPI.Services
 {
