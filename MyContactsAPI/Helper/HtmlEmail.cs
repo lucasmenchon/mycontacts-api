@@ -5,7 +5,7 @@ namespace MyContactsAPI.Helper
 {
     public class HtmlEmail
     {
-        public static string GenerateVerificationEmailHTML(string verificationCode)
+        public static string GenerateVerificationEmailHTML(string verification)
         {
             return $@"
              <!DOCTYPE html>

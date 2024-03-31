@@ -1,4 +1,4 @@
-﻿using MyContactsAPI.Models;
+﻿using MyContactsAPI.Models.ContactModels;
 
 namespace MyContactsAPI.ViewModels
 {

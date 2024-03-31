@@ -14,8 +14,11 @@
 
         public class EmailConfiguration
         {
-            public string DefaultFromEmail { get; set; } = "app.lucas@outlook.com";
-            public string DefaultFromName { get; set; } = "lucas.tf";
+            public string DefaultFromName { get; set; } = string.Empty;
+            public string DefaultFromEmail { get; set; } = string.Empty;            
+            public string DefaultFromHost { get; set; } = string.Empty;
+            public int DefaultFromPort { get; set; }
+            public string DefaultFromPassword { get; set; } = string.Empty;
         }
 
         public class SendGridConfiguration

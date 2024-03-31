@@ -1,6 +1,12 @@
 ﻿using ContactsManage.Data;
+using MailKit.Security;
+using MimeKit;
+using MyContactsAPI.Dtos.Password;
+using MyContactsAPI.Extensions;
 using MyContactsAPI.Helper;
 using MyContactsAPI.Interfaces;
+using MyContactsAPI.Models.EmailModels;
+using MyContactsAPI.Models.LoginModels;
 using MyContactsAPI.Models.PasswordModels;
 using MyContactsAPI.Models.UserModels;
 using MyContactsAPI.ViewModels;
@@ -9,88 +15,78 @@ namespace MyContactsAPI.Services
 {
     public class UserPasswordService : IUserPasswordService
     {
-        private readonly DataContext _context;
+        private readonly DataContext _dataContext;
+        private readonly JwtTokenService _jwtTokenService;
+        private readonly IUserRepository _userRepository;
 
-        public UserPasswordService(DataContext dataContext)
+        public UserPasswordService(DataContext dataContext, JwtTokenService jwtTokenService, IUserRepository userRepository)
         {
-            this._context = dataContext;
+            _dataContext = dataContext;
+            _jwtTokenService = jwtTokenService;
+            _userRepository = userRepository;
         }
 
-        public async Task<UserPasswordResponse> ChangeUserPassword(UserViewModel userLogged, string password)
+        public async Task<UserPasswordResponse> ChangeUserPassword(ChangePasswordDto passwordToChange)
         {
-            //if (userLogged == null || string.IsNullOrEmpty(password))
-            //{
-            //    return await Task.FromResult(false);
-            //}
-
-            //// Busca o usuário pelo ID
-            //User user = await _context.Users.FindAsync(userLogged.Id);
-
-            //// Verifica se o usuário foi encontrado
-            //if (user == null)
-            //{
-            //    return await Task.FromResult(false);
-            //}
-
-            //// Verifica se a senha fornecida corresponde à senha do usuário
-            //bool passwordMatch = user.Password.Challenge(password);
-
-            return null; //await Task.FromResult(passwordMatch);
-        }
-
-
-        public async Task<bool> CheckPasswordAsync(User user, string password)
-        {
-            if (user == null || string.IsNullOrEmpty(password))
-            {
-                return await Task.FromResult(false);
-            }
-
-            // Crie uma instância da classe Password com a senha armazenada no usuário
-            Password userPassword = new Password(user.Password.ToString());
-
-            // Verifique se a senha fornecida coincide com o hash armazenado no usuário
-            bool passwordMatch = userPassword.Challenge(password);
-
-            return await Task.FromResult(passwordMatch);
-        }
-
-
-        public async Task<User> ResetPasswordAsync(PasswordResetViewModel passwordReset)
-        {
-            // Busca o usuário pelo ID
-            User user = await _context.Users.FindAsync(passwordReset.Id);
+            var userIdClaim = _jwtTokenService.GetUserFromJwtToken();
+            var user = await _dataContext.Users.FindAsync(Guid.Parse(userIdClaim));
 
             if (user == null)
             {
-                throw new ArgumentException("Usuário não encontrado.");
+                return new UserPasswordResponse("User not found.", 404);
             }
 
-            // Cria uma instância da classe Password com a senha armazenada no usuário
             Password userPassword = new Password(user.Password.ToString());
 
-            // Verifica se a nova senha é igual à senha antiga
-            if (userPassword.Challenge(passwordReset.NewPassword))
+            if (!userPassword.Challenge(passwordToChange.OldPassword))
             {
-                throw new ArgumentException("A nova senha deve ser diferente da senha antiga.");
+                return new UserPasswordResponse("The old password provided is incorrect.", 400);
             }
 
-            // Cria um novo hash para a nova senha
-            Password newPassword = new Password(passwordReset.NewPassword);
-
-            // Verifica se o hash da nova senha foi gerado com sucesso
-            if (string.IsNullOrEmpty(newPassword.Hash))
+            if (userPassword.Challenge(passwordToChange.NewPassword))
             {
-                throw new ArgumentException("Falha ao gerar o hash da nova senha.");
+                return new UserPasswordResponse("The new password must be different from the old password.", 400);
             }
+
+            if (passwordToChange.NewPassword != passwordToChange.ConfirmNewPassword)
+            {
+                return new UserPasswordResponse("The new password does not match the confirmation password.", 400);
+            }
+
+            Password newPassword = new Password(passwordToChange.NewPassword);
 
             user.ChangePassword(newPassword.Hash);
 
-            // Salva as alterações no banco de dados
-            _context.Users.Update(user);
-            await _context.SaveChangesAsync();
+            _dataContext.Users.Update(user);
+            await _dataContext.SaveChangesAsync();
 
-            return user;
-        }        
+            return new UserPasswordResponse("Password changed successfully!", 201);
+        }
+
+        public async Task<UserPasswordResponse> SendPasswordResetEmail(string email)
+        {
+            try
+            {
+                email = new Email(email);
+            }
+            catch
+            {
+                return new UserPasswordResponse($"Email inválido.", 400);
+            }
+
+            var user = await _userRepository.GetUserByEmailAsync(email);
+
+            if (user == null)
+            {
+                return new UserPasswordResponse("Usuário não encontrado para o e-mail fornecido.", 403);
+            }
+
+            // Construir o link de redefinição de senha
+            var resetLink = $"www.lucas.tf/reset-password?token={JwtTokenService.GenerateToken(user)}";
+
+            await new EmailService().SendVerificationEmailAsync(email, resetLink);
+
+            return new UserPasswordResponse("E-mail de redefinição de senha enviado com sucesso.", 201);
+        }
     }
 }

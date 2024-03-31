@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyContactsAPI.Interfaces;
-using MyContactsAPI.Models;
+using MyContactsAPI.Models.ContactModels;
 using MyContactsAPI.ViewModels;
 
 namespace MyContactsAPI.Controllers
@@ -20,8 +20,8 @@ namespace MyContactsAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllContacts()
         {
-            //List<Contact> contacts = await _contactRepository.GetUserContactsAsync(_session.FindUserSession().Id);
-            return Ok(/*contacts*/);
+            List<Contact> contacts = await _contactRepository.GetUserContactsAsync();
+            return Ok(contacts);
         }
 
         [HttpPost]

@@ -1,14 +1,13 @@
-﻿using MyContactsAPI.Models.PasswordModels;
+﻿using MyContactsAPI.Dtos.Password;
+using MyContactsAPI.Models.PasswordModels;
 using MyContactsAPI.Models.UserModels;
-using MyContactsAPI.ViewModels;
 
 namespace MyContactsAPI.Interfaces
 {
     public interface IUserPasswordService
     {
-        Task<UserPasswordResponse> ChangeUserPassword(UserViewModel user, string password);
-        Task<bool> CheckPasswordAsync(User user, string password);
-        Task<User> ResetPasswordAsync(PasswordResetViewModel passwordReset);
+        Task<UserPasswordResponse> ChangeUserPassword(ChangePasswordDto passwordToChange);
+        Task<UserPasswordResponse> SendPasswordResetEmail(string email);
     }
 
 }

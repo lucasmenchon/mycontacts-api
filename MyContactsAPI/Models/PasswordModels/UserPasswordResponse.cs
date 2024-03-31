@@ -1,33 +1,32 @@
 ﻿using MyContactsAPI.SharedContext;
 
-namespace MyContactsAPI.Models.PasswordModels
+namespace MyContactsAPI.Models.PasswordModels;
+
+public class UserPasswordResponse : Response
 {
-    public class UserPasswordResponse : Response
+    protected UserPasswordResponse()
     {
-            protected UserPasswordResponse()
-            {
-            }
+    }
 
-            public UserPasswordResponse(
-                string message,
-                int status)
-            {
-                Message = message;
-                Status = status;
-            }
+    public UserPasswordResponse(
+        string message,
+        int status)
+    {
+        Message = message;
+        Status = status;
+    }
 
-            public UserPasswordResponse(string message, ResponseData data)
-            {
-                Message = message;
-                Status = 201;
-                Data = data;
-            }
+    public UserPasswordResponse(string message, ResponseData data)
+    {
+        Message = message;
+        Status = 201;
+        Data = data;
+    }
 
-            public ResponseData? Data { get; set; }
-        }
+    public ResponseData? Data { get; set; }
+}
 
-        public class ResponseData
-        {
-            public string Token { get; set; } = string.Empty;
-        }    
+public class ResponseData
+{
+    public string Token { get; set; } = string.Empty;
 }

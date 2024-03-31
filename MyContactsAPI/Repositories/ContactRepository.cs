@@ -1,17 +1,20 @@
 ﻿using ContactsManage.Data;
 using Microsoft.EntityFrameworkCore;
 using MyContactsAPI.Interfaces;
-using MyContactsAPI.Models;
+using MyContactsAPI.Models.ContactModels;
+using MyContactsAPI.Services;
 
 namespace MyContactsAPI.Repositories
 {
     public class ContactRepository : IContactRepository
     {
         private readonly DataContext _context;
+        private readonly JwtTokenService _jwtTokenService;
 
-        public ContactRepository(DataContext bancoContext)
+        public ContactRepository(DataContext bancoContext, JwtTokenService jwtTokenService)
         {
             this._context = bancoContext;
+            _jwtTokenService = jwtTokenService; 
         }
 
         public async Task<Contact> CreateContactAsync(Contact contact)
@@ -59,9 +62,10 @@ namespace MyContactsAPI.Repositories
             return true;
         }
 
-        public async Task<List<Contact>> GetUserContactsAsync(Guid userId)
+        public async Task<List<Contact>> GetUserContactsAsync()
         {
-            var userContacts = await _context.Contacts.Where(c => c.UserId == userId).ToListAsync();
+            var userIdClaim = _jwtTokenService.GetUserFromJwtToken();
+            var userContacts = await _context.Contacts.Where(c => c.UserId == Guid.Parse(userIdClaim)).ToListAsync();
             return userContacts;
         }
     }

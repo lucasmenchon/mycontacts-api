@@ -29,6 +29,7 @@ namespace MyContactsAPI.Controllers
                 return StatusCode(500, $"Ops!! Não foi possível cadastrar o usuário, tente novamente ou entre em contato com o suporte, detalhes do erro: {error.Message}");
             }
         }
+
         [Authorize]
         [HttpPut("UpdateUser")]
         public async Task<IActionResult> UpdateUser([FromBody] UpdateUserDto userUpdateDto)

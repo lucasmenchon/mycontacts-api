@@ -10,9 +10,9 @@ namespace MyContactsAPI.Controllers
     [ApiController]
     public class AuthenticationController : Controller
     {
-        private readonly IUserLoginService _loginService;
+        private readonly ILoginService _loginService;
 
-        public AuthenticationController(IUserLoginService userLogin)
+        public AuthenticationController(ILoginService userLogin)
         {
             _loginService = userLogin;
         }
@@ -22,7 +22,6 @@ namespace MyContactsAPI.Controllers
         {
             var response = await _loginService.UserSigIn(userSigIn);
 
-            // Verifica se o token JWT não é nulo antes de adicionar ao cookie
             if (response.Data != null)
             {
                 Response.Cookies.Append("AuthToken", $"Bearer {response.Data.Token}", new CookieOptions
@@ -35,6 +34,5 @@ namespace MyContactsAPI.Controllers
 
             return Ok(response);
         }
-
     }
 }

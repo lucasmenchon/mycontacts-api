@@ -18,19 +18,25 @@ public static class BuilderExtension
         : builder.Configuration.GetConnectionString("HostDb") ?? throw new InvalidOperationException("Connection string not found for HostDb");
 
         Configuration.Secrets.ApiKey =
-            builder.Configuration.GetSection("Secrets").GetValue<string>("ApiKey") ?? string.Empty;
+            builder.Configuration["Secrets:ApiKey"] ?? string.Empty;
         Configuration.Secrets.JwtPrivateKey =
-            builder.Configuration.GetSection("Secrets").GetValue<string>("JwtPrivateKey") ?? string.Empty;
+            builder.Configuration["Secrets:JwtPrivateKey"] ?? string.Empty;
         Configuration.Secrets.PasswordSaltKey =
-            builder.Configuration.GetSection("Secrets").GetValue<string>("PasswordSaltKey") ?? string.Empty;
+            builder.Configuration["Secrets:PasswordSaltKey"] ?? string.Empty;
 
         Configuration.SendGrid.ApiKey =
-            builder.Configuration.GetSection("SendGrid").GetValue<string>("ApiKey") ?? string.Empty;
+            builder.Configuration["SendGrid:ApiKey"] ?? string.Empty;
 
         Configuration.Email.DefaultFromName =
-            builder.Configuration.GetSection("Email").GetValue<string>("DefaultFromName") ?? string.Empty;
+            builder.Configuration["Email:DefaultFromName"] ?? string.Empty;
         Configuration.Email.DefaultFromEmail =
-            builder.Configuration.GetSection("Email").GetValue<string>("DefaultFromEmail") ?? string.Empty;
+            builder.Configuration["Email:DefaultFromEmail"] ?? string.Empty;
+        Configuration.Email.DefaultFromHost =
+            builder.Configuration["Email:DefaultFromHost"] ?? string.Empty;
+        Configuration.Email.DefaultFromPort =
+            int.TryParse(builder.Configuration["Email:DefaultFromPort"], out int port) ? port : 0;
+        Configuration.Email.DefaultFromPassword =
+            builder.Configuration["Email:DefaultFromPassword"] ?? string.Empty;
     }
 
     public static void AddDatabase(this WebApplicationBuilder builder)

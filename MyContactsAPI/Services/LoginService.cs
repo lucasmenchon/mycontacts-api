@@ -10,11 +10,11 @@ using MyContactsAPI.SharedContext;
 
 namespace MyContactsAPI.Services
 {
-    public class UserLoginService : IUserLoginService
+    public class LoginService : ILoginService
     {
         private readonly IUserRepository _userRepository;
 
-        public UserLoginService(IUserRepository userRepository)
+        public LoginService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
         }

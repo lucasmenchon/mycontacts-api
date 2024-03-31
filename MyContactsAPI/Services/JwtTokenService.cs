@@ -19,7 +19,7 @@ namespace MyContactsAPI.Services
         public JwtTokenService(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
-        }       
+        }
 
         public static string GenerateToken(User user)
         {
@@ -51,7 +51,7 @@ namespace MyContactsAPI.Services
             return claimIdentity;
         }
 
-        public async Task<User> GetUserFromJwtTokenAsync(DataContext dataContext)
+        public string GetUserFromJwtToken()
         {
             if (_httpContextAccessor.HttpContext == null)
             {
@@ -59,20 +59,13 @@ namespace MyContactsAPI.Services
             }
 
             var userIdClaim = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
             if (userIdClaim == null)
             {
                 throw new InvalidOperationException("ID do usuário não encontrado no token JWT.");
             }
 
-            var user = await dataContext.Users.FindAsync(Guid.Parse(userIdClaim));
-
-            if (user == null)
-            {
-                throw new InvalidOperationException("Usuário não encontrado.");
-            }
-
-            return user;
+            return userIdClaim;
         }
-
     }
 }

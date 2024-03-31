@@ -3,8 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using MyContactsAPI.Models;
 using MyContactsAPI.Models.UserModels;
+using MyContactsAPI.Models.ContactModels;
 
 namespace ContactsManage.Data
 {
