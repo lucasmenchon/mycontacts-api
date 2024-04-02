@@ -27,14 +27,14 @@ namespace MyContactsAPI.Repositories
             _jwtTokenService = jwtTokenService;
         }
 
-        public async Task<UserApiResponse> CreateUserAsync(CreateUserDto createUserDto)
+        public async Task<ApiResponse> CreateUserAsync(CreateUserDto createUserDto)
         {
             try
             {
                 var email = new Email(createUserDto.Email);
                 bool existingUser = await _dataContext.Users.AsNoTracking().AnyAsync(u => u.Email.Address == createUserDto.Email);
                 if (existingUser)
-                    return new UserApiResponse("Este email já está em uso.", 400);
+                    return new ApiResponse("Este email já está em uso.", 400);
 
                 var password = new Password(createUserDto.Password);
                 var user = new User(createUserDto.Name, createUserDto.Username, email, password);
@@ -50,22 +50,22 @@ namespace MyContactsAPI.Repositories
 
                         await transaction.CommitAsync();
 
-                        return new UserApiResponse("Cadastro realizado com sucesso. Enviamos para seu email o link de ativação da conta.", 201);
+                        return new ApiResponse("Cadastro realizado com sucesso. Enviamos para seu email o link de ativação da conta.", 201);
                     }
                     catch
                     {
                         await transaction.RollbackAsync();
-                        return new UserApiResponse("Falha no cadastro.", 500);
+                        return new ApiResponse("Falha no cadastro.", 500);
                     }
                 }
             }
             catch
             {
-                return new UserApiResponse("Falha ao criar usuário.", 500);
+                return new ApiResponse("Falha ao criar usuário.", 500);
             }
         }
 
-        public async Task<UserApiResponse> UpdateUserAsync(UpdateUserDto userUpdateDto)
+        public async Task<ApiResponse> UpdateUserAsync(UpdateUserDto userUpdateDto)
         {
             try
             {
@@ -74,7 +74,7 @@ namespace MyContactsAPI.Repositories
 
                 if (userToUpdate == null)
                 {
-                    return new UserApiResponse("Usuário não encontrado.", 404);
+                    return new ApiResponse("Usuário não encontrado.", 404);
                 }
 
                 userToUpdate.Name = userUpdateDto.Name;
@@ -83,15 +83,15 @@ namespace MyContactsAPI.Repositories
 
                 await _dataContext.SaveChangesAsync();
 
-                return new UserApiResponse("Usuário atualizado com sucesso.", 200);
+                return new ApiResponse("Usuário atualizado com sucesso.", 200);
             }
             catch
             {
-                return new UserApiResponse("Falha ao atualizar usuário.", 500);
+                return new ApiResponse("Falha ao atualizar usuário.", 500);
             }
         }
 
-        public async Task<UserApiResponse> DeleteUserAsync()
+        public async Task<ApiResponse> DeleteUserAsync()
         {
             try
             {
@@ -101,17 +101,17 @@ namespace MyContactsAPI.Repositories
 
                 if (userToDelete == null)
                 {
-                    return new UserApiResponse("Usuário não encontrado.", 404);
+                    return new ApiResponse("Usuário não encontrado.", 404);
                 }
 
                 _dataContext.Users.Remove(userToDelete);
                 await _dataContext.SaveChangesAsync();
 
-                return new UserApiResponse("Usuário excluído com sucesso.", 200);
+                return new ApiResponse("Usuário excluído com sucesso.", 200);
             }
             catch
             {
-                return new UserApiResponse("Falha ao excluir usuário.", 500);
+                return new ApiResponse("Falha ao excluir usuário.", 500);
             }
         }
 

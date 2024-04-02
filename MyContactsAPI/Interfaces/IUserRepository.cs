@@ -1,4 +1,5 @@
 ﻿using MyContactsAPI.Dtos.User;
+using MyContactsAPI.Models;
 using MyContactsAPI.Models.UserModels;
 
 namespace MyContactsAPI.Interfaces
@@ -6,8 +7,8 @@ namespace MyContactsAPI.Interfaces
     public interface IUserRepository
     {
         Task<User?> GetUserByEmailAsync(string email);
-        Task<UserApiResponse> CreateUserAsync(CreateUserDto createUserDto);
-        Task<UserApiResponse> UpdateUserAsync(UpdateUserDto userUpdateDto);        
-        Task<UserApiResponse> DeleteUserAsync();
+        Task<ApiResponse> CreateUserAsync(CreateUserDto createUserDto);
+        Task<ApiResponse> UpdateUserAsync(UpdateUserDto userUpdateDto);        
+        Task<ApiResponse> DeleteUserAsync();
     }
 }

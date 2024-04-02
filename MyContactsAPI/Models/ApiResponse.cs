@@ -1,14 +1,14 @@
 ﻿using MyContactsAPI.SharedContext;
 
-namespace MyContactsAPI.Models.PasswordModels;
+namespace MyContactsAPI.Models;
 
-public class UserPasswordResponse : Response
+public class ApiResponse : Response
 {
-    protected UserPasswordResponse()
+    protected ApiResponse()
     {
     }
 
-    public UserPasswordResponse(
+    public ApiResponse(
         string message,
         int status)
     {
@@ -16,7 +16,7 @@ public class UserPasswordResponse : Response
         Status = status;
     }
 
-    public UserPasswordResponse(string message, ResponseData data)
+    public ApiResponse(string message, ResponseData data)
     {
         Message = message;
         Status = 201;

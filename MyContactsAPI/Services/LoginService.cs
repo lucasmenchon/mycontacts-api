@@ -4,7 +4,6 @@ using MyContactsAPI.Dtos.User;
 using MyContactsAPI.Interfaces;
 using MyContactsAPI.Models;
 using MyContactsAPI.Models.EmailModels;
-using MyContactsAPI.Models.LoginModels;
 using MyContactsAPI.Models.UserModels;
 using MyContactsAPI.SharedContext;
 
@@ -19,7 +18,7 @@ namespace MyContactsAPI.Services
             _userRepository = userRepository;
         }
 
-        public async Task<LoginApiResponse> UserSigIn(UserSignInDto userSignIn)
+        public async Task<ApiResponse> UserSigIn(UserSignInDto userSignIn)
         {
             try
             {
@@ -29,43 +28,43 @@ namespace MyContactsAPI.Services
                 }
                 catch
                 {
-                    return new LoginApiResponse($"Email inválido.", 400);
+                    return new ApiResponse($"Email inválido.", 400);
                 }
 
                 User? user = await _userRepository.GetUserByEmailAsync(userSignIn.Email);
                 if (user is null)
-                    return new LoginApiResponse("Perfil não encontrado", 404);
+                    return new ApiResponse("Perfil não encontrado", 404);
 
                 if (!user.Password.Challenge(userSignIn.Password))
-                    return new LoginApiResponse("Usuário ou senha inválidos", 400);
+                    return new ApiResponse("Usuário ou senha inválidos", 400);
 
                 try
                 {
                     if (!user.Email.Verification.IsActive)
-                        return new LoginApiResponse("Conta inativa", 400);
+                        return new ApiResponse("Conta inativa", 400);
                 }
                 catch
                 {
-                    return new LoginApiResponse("Não foi possível verificar seu perfil", 500);
+                    return new ApiResponse("Não foi possível verificar seu perfil", 500);
                 }
 
                 try
                 {
-                    var data = new Models.LoginModels.ResponseData
+                    var data = new ResponseData
                     {
                         Token = JwtTokenService.GenerateToken(user)
                     };
 
-                    return new LoginApiResponse(string.Empty, data);
+                    return new ApiResponse(string.Empty, data);
                 }
                 catch
                 {
-                    return new LoginApiResponse("Não foi possível obter os dados do perfil", 500);
+                    return new ApiResponse("Não foi possível obter os dados do perfil", 500);
                 }
             }
             catch
             {
-                return new LoginApiResponse("Não foi possível encontrar seu perfil", 500);
+                return new ApiResponse("Não foi possível encontrar seu perfil", 500);
             }
         }
     }
