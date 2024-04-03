@@ -35,7 +35,7 @@ public class ContactRepository : IContactRepository
 
         if (existingContact == null)
         {
-            throw new InvalidOperationException("Contato não encontrado.");
+            throw new InvalidOperationException("Contact not found.");
         }
 
         existingContact.Name = contact.Name;

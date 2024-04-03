@@ -28,7 +28,7 @@ namespace MyContactsAPI.Repositories
 
                 if (userToUpdate == null)
                 {
-                    return new ApiResponse("Usuário não encontrado.", 404);
+                    return new ApiResponse("User not found.", 404);
                 }
 
                 userToUpdate.Name = userUpdateDto.Name;
@@ -37,11 +37,11 @@ namespace MyContactsAPI.Repositories
 
                 await _dataContext.SaveChangesAsync();
 
-                return new ApiResponse("Usuário atualizado com sucesso.", 200);
+                return new ApiResponse("User updated successfully.", 200);
             }
             catch
             {
-                return new ApiResponse("Falha ao atualizar usuário.", 500);
+                return new ApiResponse("Failed to update user.", 500);
             }
         }
 
@@ -55,17 +55,17 @@ namespace MyContactsAPI.Repositories
 
                 if (userToDelete == null)
                 {
-                    return new ApiResponse("Usuário não encontrado.", 404);
+                    return new ApiResponse("User not found.", 404);
                 }
 
                 _dataContext.Users.Remove(userToDelete);
                 await _dataContext.SaveChangesAsync();
 
-                return new ApiResponse("Usuário excluído com sucesso.", 200);
+                return new ApiResponse("User deleted successfully.", 200);
             }
             catch
             {
-                return new ApiResponse("Falha ao excluir usuário.", 500);
+                return new ApiResponse("Failed to delete user.", 500);
             }
         }
 
