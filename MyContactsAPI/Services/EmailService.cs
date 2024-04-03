@@ -2,9 +2,8 @@
 using MailKit.Security;
 using MimeKit;
 using MyContactsAPI.Extensions;
-using MyContactsAPI.Helper;
 using MyContactsAPI.Interfaces;
-using System.ComponentModel.DataAnnotations;
+using MyContactsAPI.Models.EmailModels;
 
 namespace MyContactsAPI.Services
 {

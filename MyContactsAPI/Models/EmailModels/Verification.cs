@@ -16,13 +16,13 @@ namespace MyContactsAPI.Models.EmailModels
         public void Verify(string code)
         {
             if (IsActive)
-                throw new Exception("Este item já foi ativado");
+                throw new Exception("This item has already been activated");
 
             if (ExpiresAt < DateTime.UtcNow)
-                throw new Exception("Este código já expirou");
+                throw new Exception("This code has already expired");
 
             if (!string.Equals(code.Trim(), Code.Trim(), StringComparison.CurrentCultureIgnoreCase))
-                throw new Exception("Código de verificação inválido");
+                throw new Exception("Invalid verification code");
 
             ExpiresAt = null;
             VerifiedAt = DateTimeOffset.UtcNow;

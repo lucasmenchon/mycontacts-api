@@ -15,18 +15,18 @@ namespace MyContactsAPI.Models.EmailModels
         public Email(string address)
         {
             if (string.IsNullOrEmpty(address))
-                throw new Exception("Email inválido");
+                throw new Exception("Invalid email");
 
             Address = address.Trim().ToLower();
 
             if (Address.Length < 5)
-                throw new Exception("Email inválido");
+                throw new Exception("Invalid email");
 
             if (!EmailRegex().IsMatch(Address))
-                throw new Exception("Email inválido");
+                throw new Exception("Invalid email");
         }
 
-        public string Address { get; }
+        public string Address { get; } = null!;
         public string Hash => Address.ToBase64();
         public Verification Verification { get; private set; } = new();
 

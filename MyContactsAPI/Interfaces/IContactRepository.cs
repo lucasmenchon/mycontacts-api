@@ -6,7 +6,7 @@ namespace MyContactsAPI.Interfaces
     {
         Task<Contact> CreateContactAsync(Contact contact);
         Task<List<Contact>> GetUserContactsAsync();
-        Task<Contact> UpdateContactAsync(int id, Contact contact);
-        Task<bool> DeleteContactAsync(int id);
+        Task<Contact> UpdateContactAsync(Guid id, Contact contact);
+        Task<bool> DeleteContactAsync(Guid id);
     }
 }

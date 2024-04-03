@@ -29,25 +29,23 @@ namespace MyContactsAPI.Controllers
         {
             try
             {
-                //UserViewModel userLogged = _session.FindUserSession();
-                //contact.UserId = userLogged.Id;
                 await _contactRepository.CreateContactAsync(contact);
                 return CreatedAtAction(nameof(GetAllContacts), new { id = contact.Id }, contact);
             }
             catch (Exception error)
             {
-                return StatusCode(500, $"Ops!! Não foi possível cadastrar seu contato, tente novamente ou entre em contato com o suporte, detalhes do erro: {error.Message}");
+                return StatusCode(500, $"Oops!! Unable to register your contact, try again or contact support, error details: {error.Message}");
             }
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateContact(int id, [FromBody] Contact contactUpdate)
+        public async Task<IActionResult> UpdateContact(Guid id, [FromBody] Contact contactUpdate)
         {
             try
             {
                 if (id != contactUpdate.Id)
                 {
-                    return BadRequest("ID do contato não corresponde ao ID fornecido na URL.");
+                    return BadRequest("Contact ID does not match the ID provided in the URL.");
                 }
 
                 await _contactRepository.UpdateContactAsync(id, contactUpdate);
@@ -56,25 +54,25 @@ namespace MyContactsAPI.Controllers
             }
             catch (Exception error)
             {
-                return StatusCode(500, $"Ops!! Não foi possível atualizar seu contato, tente novamente ou entre em contato com o suporte, detalhes do erro: {error.Message}");
+                return StatusCode(500, $"Oops!! Unable to update your contact, please try again or contact support, error details: {error.Message}");
             }
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteContact(int id)
+        public async Task<IActionResult> DeleteContact(Guid id)
         {
             try
             {
                 bool result = await _contactRepository.DeleteContactAsync(id);
                 if (!result)
                 {
-                    return NotFound("Contato não encontrado.");
+                    return NotFound("Contact not found.");
                 }
                 return NoContent();
             }
             catch (Exception error)
             {
-                return StatusCode(500, $"Ops!! Não foi possível apagar seu contato, tente novamente ou entre em contato com o suporte, detalhes do erro: {error.Message}");
+                return StatusCode(500, $"Oops!! Unable to delete your contact, try again or contact support, error details: {error.Message}");
             }
         }
     }

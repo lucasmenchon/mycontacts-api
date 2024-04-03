@@ -1,7 +1,7 @@
 ﻿using static System.Net.Mime.MediaTypeNames;
 using System.Drawing;
 
-namespace MyContactsAPI.Helper
+namespace MyContactsAPI.Models.EmailModels
 {
     public class HtmlEmail
     {

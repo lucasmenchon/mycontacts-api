@@ -1,15 +1,9 @@
 ﻿using ContactsManage.Data;
-using MailKit.Security;
-using MimeKit;
 using MyContactsAPI.Dtos.Password;
-using MyContactsAPI.Extensions;
-using MyContactsAPI.Helper;
 using MyContactsAPI.Interfaces;
 using MyContactsAPI.Models;
 using MyContactsAPI.Models.EmailModels;
 using MyContactsAPI.Models.PasswordModels;
-using MyContactsAPI.Models.UserModels;
-using MyContactsAPI.ViewModels;
 
 namespace MyContactsAPI.Services
 {
@@ -71,14 +65,14 @@ namespace MyContactsAPI.Services
             }
             catch
             {
-                return new ApiResponse($"Email inválido.", 400);
+                return new ApiResponse($"Invalid email.", 400);
             }
 
             var user = await _userRepository.GetUserByEmailAsync(email);
 
             if (user == null)
             {
-                return new ApiResponse("Usuário não encontrado para o e-mail fornecido.", 403);
+                return new ApiResponse("User not found for the email provided.", 403);
             }
 
             // Construir o link de redefinição de senha
@@ -86,7 +80,7 @@ namespace MyContactsAPI.Services
 
             await new EmailService().SendVerificationEmailAsync(email, resetLink);
 
-            return new ApiResponse("E-mail de redefinição de senha enviado com sucesso.", 201);
+            return new ApiResponse("Password reset email sent successfully.", 201);
         }
     }
 }

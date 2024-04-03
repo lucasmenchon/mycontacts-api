@@ -26,7 +26,7 @@ namespace ContactsManage.Data
         {
             public DataContext CreateDbContext(string[] args)
             {
-                string environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+                string environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? string.Empty;
                 string environmentSuffix = environmentName == "Development" ? ".Development" : "";
                 var configuration = new ConfigurationBuilder()
                     .AddJsonFile($"appsettings{environmentSuffix}.json")
@@ -34,7 +34,7 @@ namespace ContactsManage.Data
 
                 var optionsBuilder = new DbContextOptionsBuilder<DataContext>();
 
-                if (environmentName.Equals("Development"))
+                if (!string.IsNullOrEmpty(environmentName) && environmentName.Equals("Development"))
                 {
                     optionsBuilder.UseNpgsql(configuration.GetConnectionString("LocalDb"));
                 }

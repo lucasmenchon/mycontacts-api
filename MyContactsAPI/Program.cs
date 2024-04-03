@@ -23,7 +23,7 @@ builder.Services.TryAddScoped<IContactRepository, ContactRepository>();
 builder.Services.TryAddScoped<IUserRepository, UserRepository>();
 builder.Services.TryAddScoped<IUserPasswordService, UserPasswordService>();
 builder.Services.TryAddScoped<IEmailService, EmailService>();
-builder.Services.TryAddScoped<ILoginService, LoginService>();
+builder.Services.TryAddScoped<IAuthService, AuthService>();
 builder.Services.TryAddScoped<JwtTokenService>();
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 

@@ -4,65 +4,19 @@ using MyContactsAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using MyContactsAPI.Dtos.User;
 using MyContactsAPI.Models.UserModels;
-using MyContactsAPI.Models.PasswordModels;
-using Org.BouncyCastle.Asn1.Ocsp;
-using System.Threading;
-using System.Security.Claims;
 using MyContactsAPI.Services;
-using Microsoft.AspNetCore.Http;
-using MyContactsAPI.Models.EmailModels;
 
 namespace MyContactsAPI.Repositories
 {
     public class UserRepository : IUserRepository
     {
         private readonly DataContext _dataContext;
-        private readonly IEmailService _emailService;
         private readonly JwtTokenService _jwtTokenService;
 
-        public UserRepository(DataContext dataContext, IEmailService email, JwtTokenService jwtTokenService)
+        public UserRepository(DataContext dataContext, JwtTokenService jwtTokenService)
         {
             this._dataContext = dataContext;
-            _emailService = email;
             _jwtTokenService = jwtTokenService;
-        }
-
-        public async Task<ApiResponse> CreateUserAsync(CreateUserDto createUserDto)
-        {
-            try
-            {
-                var email = new Email(createUserDto.Email);
-                bool existingUser = await _dataContext.Users.AsNoTracking().AnyAsync(u => u.Email.Address == createUserDto.Email);
-                if (existingUser)
-                    return new ApiResponse("Este email já está em uso.", 400);
-
-                var password = new Password(createUserDto.Password);
-                var user = new User(createUserDto.Name, createUserDto.Username, email, password);
-
-                using (var transaction = _dataContext.Database.BeginTransaction())
-                {
-                    try
-                    {
-                        await _dataContext.Users.AddAsync(user);
-                        await _dataContext.SaveChangesAsync();
-
-                        await _emailService.SendVerificationEmailAsync(email.Address, email.Verification.Code);
-
-                        await transaction.CommitAsync();
-
-                        return new ApiResponse("Cadastro realizado com sucesso. Enviamos para seu email o link de ativação da conta.", 201);
-                    }
-                    catch
-                    {
-                        await transaction.RollbackAsync();
-                        return new ApiResponse("Falha no cadastro.", 500);
-                    }
-                }
-            }
-            catch
-            {
-                return new ApiResponse("Falha ao criar usuário.", 500);
-            }
         }
 
         public async Task<ApiResponse> UpdateUserAsync(UpdateUserDto userUpdateDto)

@@ -16,20 +16,6 @@ namespace MyContactsAPI.Controllers
             _userRepository = userRepository;
         }
 
-        [HttpPost("RegisterUser")]
-        public async Task<IActionResult> CreateUser([FromBody] CreateUserDto createUserDto)
-        {
-            try
-            {
-                var response = await _userRepository.CreateUserAsync(createUserDto);
-                return Ok(response);
-            }
-            catch (Exception error)
-            {
-                return StatusCode(500, $"Ops!! Não foi possível cadastrar o usuário, tente novamente ou entre em contato com o suporte, detalhes do erro: {error.Message}");
-            }
-        }
-
         [Authorize]
         [HttpPut("UpdateUser")]
         public async Task<IActionResult> UpdateUser([FromBody] UpdateUserDto userUpdateDto)
@@ -41,7 +27,7 @@ namespace MyContactsAPI.Controllers
             }
             catch (Exception error)
             {
-                return StatusCode(500, $"Ops!! Não foi possível atualizar seu usuário, tente novamente ou entre em contato com o suporte, detalhes do erro: {error.Message}");
+                return StatusCode(500, $"Oops!! Unable to update your user, please try again or contact support, error details: {error.Message}");
             }
         }
 
@@ -56,7 +42,7 @@ namespace MyContactsAPI.Controllers
             }
             catch (Exception error)
             {
-                return StatusCode(500, $"Ops!! Não foi possível apagar seu usuário, tente novamente ou entre em contato com o suporte, detalhes do erro: {error.Message}");
+                return StatusCode(500, $"Oops!! Unable to delete your username, try again or contact support, error details: {error.Message}");
             }
         }
     }

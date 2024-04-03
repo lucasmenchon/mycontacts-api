@@ -6,8 +6,7 @@ namespace MyContactsAPI.Interfaces
 {
     public interface IUserRepository
     {
-        Task<User?> GetUserByEmailAsync(string email);
-        Task<ApiResponse> CreateUserAsync(CreateUserDto createUserDto);
+        Task<User?> GetUserByEmailAsync(string email);        
         Task<ApiResponse> UpdateUserAsync(UpdateUserDto userUpdateDto);        
         Task<ApiResponse> DeleteUserAsync();
     }

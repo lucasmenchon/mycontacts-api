@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Helper\Cryptography.cs" />
+    <Compile Remove="Extensions\Helper\Cryptography.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,6 +28,10 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Extensions\Helper\" />
   </ItemGroup>
 
 </Project>
