@@ -69,7 +69,7 @@ namespace MyContactsAPI.Repositories
         {
             try
             {
-                var userIdClaim = _jwtTokenService.GetUserFromJwtToken();
+                var userIdClaim = _jwtTokenService.GetUserIdFromJwtToken();
                 var userToUpdate = await _dataContext.Users.FindAsync(Guid.Parse(userIdClaim));
 
                 if (userToUpdate == null)
@@ -95,7 +95,7 @@ namespace MyContactsAPI.Repositories
         {
             try
             {
-                var userIdClaim = _jwtTokenService.GetUserFromJwtToken();
+                var userIdClaim = _jwtTokenService.GetUserIdFromJwtToken();
 
                 var userToDelete = await _dataContext.Users.FindAsync(Guid.Parse(userIdClaim));
 

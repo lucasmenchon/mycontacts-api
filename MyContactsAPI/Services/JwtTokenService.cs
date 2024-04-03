@@ -51,7 +51,7 @@ namespace MyContactsAPI.Services
             return claimIdentity;
         }
 
-        public string GetUserFromJwtToken()
+        public string GetUserIdFromJwtToken()
         {
             if (_httpContextAccessor.HttpContext == null)
             {

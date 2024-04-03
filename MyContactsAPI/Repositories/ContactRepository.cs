@@ -64,7 +64,7 @@ namespace MyContactsAPI.Repositories
 
         public async Task<List<Contact>> GetUserContactsAsync()
         {
-            var userIdClaim = _jwtTokenService.GetUserFromJwtToken();
+            var userIdClaim = _jwtTokenService.GetUserIdFromJwtToken();
             var userContacts = await _context.Contacts.Where(c => c.UserId == Guid.Parse(userIdClaim)).ToListAsync();
             return userContacts;
         }

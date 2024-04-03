@@ -28,7 +28,7 @@ namespace MyContactsAPI.Services
 
         public async Task<ApiResponse> ChangeUserPassword(ChangePasswordDto passwordToChange)
         {
-            var userIdClaim = _jwtTokenService.GetUserFromJwtToken();
+            var userIdClaim = _jwtTokenService.GetUserIdFromJwtToken();
             var user = await _dataContext.Users.FindAsync(Guid.Parse(userIdClaim));
 
             if (user == null)

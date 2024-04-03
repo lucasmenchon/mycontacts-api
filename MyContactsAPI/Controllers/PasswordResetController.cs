@@ -11,12 +11,10 @@ namespace MyContactsAPI.Controllers
     [Route("api/[controller]")]
     public class PasswordResetController : Controller
     {
-        private readonly IUserRepository _userRepository;
         private readonly IUserPasswordService _userPasswordService;
 
-        public PasswordResetController(IUserRepository userRepository, IUserPasswordService userPasswordService)
+        public PasswordResetController(IUserPasswordService userPasswordService)
         {
-            _userRepository = userRepository;
             _userPasswordService = userPasswordService;
         }
 
