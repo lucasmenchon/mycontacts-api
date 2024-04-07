@@ -13,9 +13,8 @@ public class EmailService : IEmailService
     {
         try
         {
-            // Construir mensagem de e-mail
             var emailMessage = new MimeMessage();
-            emailMessage.From.Add(new MailboxAddress(Configuration.Email.DefaultFromName, Configuration.Email.DefaultFromEmail));
+            emailMessage.From.Add(new MailboxAddress(Configuration.Email.Name, Configuration.Email.FromEmail));
             emailMessage.To.Add(new MailboxAddress("", email));
             emailMessage.Subject = "Verificação da conta";
 
@@ -23,11 +22,10 @@ public class EmailService : IEmailService
             bodyBuilder.HtmlBody = HtmlEmail.GenerateVerificationEmailHTML(verificationCode);
             emailMessage.Body = bodyBuilder.ToMessageBody();
 
-            // Enviar e-mail usando SmtpClient
             using (var client = new SmtpClient())
             {
-                await client.ConnectAsync(Configuration.Email.DefaultFromHost, Configuration.Email.DefaultFromPort, SecureSocketOptions.StartTls);
-                await client.AuthenticateAsync(Configuration.Email.DefaultFromEmail, Configuration.Email.DefaultFromPassword);
+                await client.ConnectAsync(Configuration.Email.Host, Configuration.Email.Port, SecureSocketOptions.StartTls);
+                await client.AuthenticateAsync(Configuration.Email.FromEmail, Configuration.Email.Password);
                 await client.SendAsync(emailMessage);
                 await client.DisconnectAsync(true);
             }

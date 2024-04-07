@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MyContactsAPI.Interfaces;
 using MyContactsAPI.Models.ContactModels;
 
@@ -16,6 +17,7 @@ public class ContactController : Controller
         _contactRepository = contactRepository;
     }
 
+    [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetAllContacts()
     {
@@ -30,6 +32,7 @@ public class ContactController : Controller
         }
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> CreateContact(ContactDto contact)
     {
@@ -44,6 +47,7 @@ public class ContactController : Controller
         }
     }
 
+    [Authorize]
     [HttpPut("UpdateContact={id}")]
     public async Task<IActionResult> UpdateContact([FromBody] ContactDto contactUpdate)
     {
@@ -58,6 +62,7 @@ public class ContactController : Controller
         }
     }
 
+    [Authorize]
     [HttpDelete("DeleteContact={id}")]
     public async Task<IActionResult> DeleteContact(Guid id)
     {

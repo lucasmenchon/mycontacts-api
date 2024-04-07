@@ -1,47 +1,50 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
+using MyContactsAPI.Extensions;
 using MyContactsAPI.Maps;
 using MyContactsAPI.Models.ContactModels;
 using MyContactsAPI.Models.UserModels;
+using System;
 
-namespace ContactsManage.Data;
-
-public class DataContext : DbContext
+namespace ContactsManage.Data
 {
-    public DataContext(DbContextOptions<DataContext> options) : base(options) { }
-
-    public virtual DbSet<Contact> Contacts { get; set; }
-    public virtual DbSet<User> Users { get; set; }
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    public class DataContext : DbContext
     {
-        modelBuilder.ApplyConfiguration(new ContactMap());
-        modelBuilder.ApplyConfiguration(new UserMap());
-        base.OnModelCreating(modelBuilder);
-    }
+        public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
-    public class DataContextFactory : IDesignTimeDbContextFactory<DataContext>
-    {
-        public DataContext CreateDbContext(string[] args)
+        public virtual DbSet<Contact> Contacts { get; set; }
+        public virtual DbSet<User> Users { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            string environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? string.Empty;
-            string environmentSuffix = environmentName == "Development" ? ".Development" : "";
-            var configuration = new ConfigurationBuilder()
-                .AddJsonFile($"appsettings{environmentSuffix}.json")
-                .Build();
+            modelBuilder.ApplyConfiguration(new ContactMap());
+            modelBuilder.ApplyConfiguration(new UserMap());
+            base.OnModelCreating(modelBuilder);
+        }
 
-            var optionsBuilder = new DbContextOptionsBuilder<DataContext>();
-
-            if (!string.IsNullOrEmpty(environmentName) && environmentName.Equals("Development"))
+        public class DataContextFactory : IDesignTimeDbContextFactory<DataContext>
+        {
+            public DataContext CreateDbContext(string[] args)
             {
-                optionsBuilder.UseNpgsql(configuration.GetConnectionString("LocalDb"));
-            }
-            else
-            {
-                optionsBuilder.UseNpgsql(configuration.GetConnectionString("HostDb"));
-            }
+                try
+                {
+                    if (string.IsNullOrEmpty(Configuration.Database.ConnectionString))
+                    {
+                        throw new InvalidOperationException("Database connection string is not configured.");
+                    }
 
-            return new DataContext(optionsBuilder.Options);
+                    var optionsBuilder = new DbContextOptionsBuilder<DataContext>();
+                    optionsBuilder.UseNpgsql(Configuration.Database.ConnectionString);
+
+                    return new DataContext(optionsBuilder.Options);
+                }
+                catch (Exception ex)
+                {
+                    // Add error handling here, such as logging or throwing a custom exception
+                    throw new InvalidOperationException("Failed to create database context.", ex);
+                }
+            }
         }
     }
 }

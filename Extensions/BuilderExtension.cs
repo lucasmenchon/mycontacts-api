@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using System.Text;
+using static MyContactsAPI.Extensions.Configuration;
 
 namespace MyContactsAPI.Extensions;
 
@@ -10,31 +12,11 @@ public static class BuilderExtension
 {
     public static void AddConfiguration(this WebApplicationBuilder builder)
     {
-        Configuration.Database.ConnectionString =
-    builder.Environment.IsDevelopment()
-        ? builder.Configuration.GetConnectionString("LocalDb") ?? throw new InvalidOperationException("Connection string not found for LocalDb")
-        : builder.Configuration.GetConnectionString("HostDb") ?? throw new InvalidOperationException("Connection string not found for HostDb");
+        Configuration.Database.ConnectionString = GetConnectionString(builder);
 
-        Configuration.Secrets.ApiKey =
-            builder.Configuration["Secrets:ApiKey"] ?? string.Empty;
-        Configuration.Secrets.JwtPrivateKey =
-            builder.Configuration["Secrets:JwtPrivateKey"] ?? string.Empty;
-        Configuration.Secrets.PasswordSaltKey =
-            builder.Configuration["Secrets:PasswordSaltKey"] ?? string.Empty;
+        Configuration.Secrets = GetSecretsConfiguration();
 
-        Configuration.SendGrid.ApiKey =
-            builder.Configuration["SendGrid:ApiKey"] ?? string.Empty;
-
-        Configuration.Email.DefaultFromName =
-            builder.Configuration["Email:DefaultFromName"] ?? string.Empty;
-        Configuration.Email.DefaultFromEmail =
-            builder.Configuration["Email:DefaultFromEmail"] ?? string.Empty;
-        Configuration.Email.DefaultFromHost =
-            builder.Configuration["Email:DefaultFromHost"] ?? string.Empty;
-        Configuration.Email.DefaultFromPort =
-            int.TryParse(builder.Configuration["Email:DefaultFromPort"], out int port) ? port : 0;
-        Configuration.Email.DefaultFromPassword =
-            builder.Configuration["Email:DefaultFromPassword"] ?? string.Empty;
+        Configuration.Email = GetEmailConfiguration();
     }
 
     public static void AddDatabase(this WebApplicationBuilder builder)
@@ -73,8 +55,38 @@ public static class BuilderExtension
             options.Cookie.HttpOnly = true;
             options.SlidingExpiration = false;
         });
+    }
 
-        builder.Services.AddAuthorization();
+    private static string GetConnectionString(WebApplicationBuilder builder)
+    {
+        string connectionString = builder.Environment.IsDevelopment() ?
+        Environment.GetEnvironmentVariable("LOCAL_DB_CONNECTION") ?? string.Empty :
+        Environment.GetEnvironmentVariable("HOST_DB_CONNECTION") ?? string.Empty;
+
+        return connectionString;
+    }
+
+    private static SecretsConfiguration GetSecretsConfiguration()
+    {
+        string secretsConfig = Environment.GetEnvironmentVariable("SECRETS_CONFIG") ?? string.Empty;
+        var secrets = JsonConvert.DeserializeObject<SecretsConfiguration>(secretsConfig);
+
+        return secrets ?? new SecretsConfiguration();
+    }
+
+    private static EmailConfiguration GetEmailConfiguration()
+    {
+        string emailConfig = Environment.GetEnvironmentVariable("EMAIL_CONFIG") ?? string.Empty;
+        var emailSettings = JsonConvert.DeserializeObject<EmailConfiguration>(emailConfig);
+
+        return new EmailConfiguration
+        {
+            Name = emailSettings?.Name ?? string.Empty,
+            FromEmail = emailSettings?.FromEmail ?? string.Empty,
+            Host = emailSettings?.Host ?? string.Empty,
+            Port = int.TryParse(emailSettings?.Port.ToString(), out int port) ? port : 0,
+            Password = emailSettings?.Password ?? string.Empty
+        };
     }
 }
 

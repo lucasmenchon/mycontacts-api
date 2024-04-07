@@ -3,7 +3,6 @@ public static class Configuration
 {
     public static SecretsConfiguration Secrets { get; set; } = new();
     public static EmailConfiguration Email { get; set; } = new();
-    public static SendGridConfiguration SendGrid { get; set; } = new();
     public static DatabaseConfiguration Database { get; set; } = new();
 
     public class DatabaseConfiguration
@@ -13,11 +12,11 @@ public static class Configuration
 
     public class EmailConfiguration
     {
-        public string DefaultFromName { get; set; } = string.Empty;
-        public string DefaultFromEmail { get; set; } = string.Empty;
-        public string DefaultFromHost { get; set; } = string.Empty;
-        public int DefaultFromPort { get; set; }
-        public string DefaultFromPassword { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public string FromEmail { get; set; } = string.Empty;
+        public string Host { get; set; } = string.Empty;
+        public int Port { get; set; }
+        public string Password { get; set; } = string.Empty;
     }
 
     public class SendGridConfiguration

@@ -21,7 +21,6 @@ public class Password : ValueObject
         Hash = Hashing(text);
     }
 
-
     public bool Challenge(string plainTextPassword)
         => Verify(Hash, plainTextPassword);
 
