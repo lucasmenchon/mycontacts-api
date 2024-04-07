@@ -21,7 +21,7 @@ public class ApiResponse : Response
         Message = message;
         Status = 201;
         Data = data;
-    }
+    }    
 
     public ResponseData? Data { get; set; }
 }

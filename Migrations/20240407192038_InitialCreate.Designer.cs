@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MyContactsAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240329022410_InitialCreate")]
+    [Migration("20240407192038_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -25,13 +25,11 @@ namespace MyContactsAPI.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("MyContactsAPI.Models.Contact", b =>
+            modelBuilder.Entity("MyContactsAPI.Models.ContactModels.Contact", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<string>("CellPhone")
                         .IsRequired()
@@ -86,7 +84,7 @@ namespace MyContactsAPI.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
-            modelBuilder.Entity("MyContactsAPI.Models.Contact", b =>
+            modelBuilder.Entity("MyContactsAPI.Models.ContactModels.Contact", b =>
                 {
                     b.HasOne("MyContactsAPI.Models.UserModels.User", "User")
                         .WithMany()
