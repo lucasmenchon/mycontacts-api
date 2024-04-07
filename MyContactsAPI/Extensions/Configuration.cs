@@ -1,5 +1,4 @@
 ﻿namespace MyContactsAPI.Extensions;
-
 public static class Configuration
 {
     public static SecretsConfiguration Secrets { get; set; } = new();

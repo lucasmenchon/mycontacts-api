@@ -5,50 +5,49 @@ using MyContactsAPI.Models.UserModels;
 using MyContactsAPI.Repositories;
 using Newtonsoft.Json.Linq;
 
-namespace MyContactsAPI.Controllers
-{
-    [Route("api/[controller]")]
-    [ApiController]
-    public class AuthenticationController : Controller
-    {
-        private readonly IAuthService _authService;
+namespace MyContactsAPI.Controllers;
 
-        public AuthenticationController(IAuthService userLogin)
+[Route("api/[controller]")]
+[ApiController]
+public class AuthenticationController : Controller
+{
+    private readonly IAuthRepository _authService;
+
+    public AuthenticationController(IAuthRepository userLogin)
+    {
+        _authService = userLogin;
+    }
+
+    [HttpPost, Route("Login")]
+    public async Task<IActionResult> LoginAccess(UserSignInDto userSigIn)
+    {
+        var response = await _authService.UserSigIn(userSigIn);
+
+        if (response.Data != null)
         {
-            _authService = userLogin;
+            Response.Cookies.Append("AuthToken", $"Bearer {response.Data.Token}", new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = DateTimeOffset.UtcNow.AddHours(2),
+                Secure = true
+            });
         }
 
-        [HttpPost, Route("Login")]
-        public async Task<IActionResult> LoginAccess(UserSignInDto userSigIn)
+        return Ok(response);
+    }
+
+    [HttpPost("RegisterUser")]
+    public async Task<IActionResult> RegisterUser([FromBody] CreateUserDto createUserDto)
+    {
+        try
         {
-            var response = await _authService.UserSigIn(userSigIn);
-
-            if (response.Data != null)
-            {
-                Response.Cookies.Append("AuthToken", $"Bearer {response.Data.Token}", new CookieOptions
-                {
-                    HttpOnly = true,
-                    Expires = DateTimeOffset.UtcNow.AddHours(2),
-                    Secure = true
-                });
-            }
-
+            var response = await _authService.CreateUserAsync(createUserDto);
             return Ok(response);
         }
-
-        [HttpPost("RegisterUser")]
-        public async Task<IActionResult> RegisterUser([FromBody] CreateUserDto createUserDto)
+        catch (Exception error)
         {
-            try
-            {
-                var response = await _authService.CreateUserAsync(createUserDto);
-                return Ok(response);
-            }
-            catch (Exception error)
-            {
-                return StatusCode(500, $"Oops!! Unable to register user, try again or contact support, error details: {error.Message}");
-            }
+            return StatusCode(500, $"Oops!! Unable to register user, try again or contact support, error details: {error.Message}");
         }
-
     }
+
 }

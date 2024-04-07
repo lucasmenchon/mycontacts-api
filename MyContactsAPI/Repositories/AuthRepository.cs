@@ -7,17 +7,18 @@ using MyContactsAPI.Models;
 using MyContactsAPI.Models.EmailModels;
 using MyContactsAPI.Models.PasswordModels;
 using MyContactsAPI.Models.UserModels;
+using MyContactsAPI.Services;
 using MyContactsAPI.SharedContext;
 
-namespace MyContactsAPI.Services
+namespace MyContactsAPI.Repositories
 {
-    public class AuthService : IAuthService
+    public class AuthRepository : IAuthRepository
     {
         private readonly IUserRepository _userRepository;
         private readonly IEmailService _emailService;
         private readonly DataContext _dataContext;
 
-        public AuthService(DataContext dataContext,IUserRepository userRepository, IEmailService emailService)
+        public AuthRepository(DataContext dataContext, IUserRepository userRepository, IEmailService emailService)
         {
             _userRepository = userRepository;
             _emailService = emailService;

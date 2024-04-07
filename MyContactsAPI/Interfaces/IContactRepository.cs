@@ -1,12 +1,13 @@
-﻿using MyContactsAPI.Models.ContactModels;
+﻿using MyContactsAPI.Models;
+using MyContactsAPI.Models.ContactModels;
 
-namespace MyContactsAPI.Interfaces
+namespace MyContactsAPI.Interfaces;
+
+public interface IContactRepository
 {
-    public interface IContactRepository
-    {
-        Task<Contact> CreateContactAsync(Contact contact);
-        Task<List<Contact>> GetUserContactsAsync();
-        Task<Contact> UpdateContactAsync(Guid id, Contact contact);
-        Task<bool> DeleteContactAsync(Guid id);
-    }
+    Task<ApiResponse> CreateContactAsync(ContactDto contact);
+    Task<List<ContactDto>> GetUserContactsAsync();
+    Task<ApiResponse> UpdateContactAsync(ContactDto contact);
+    Task<ApiResponse> DeleteContactAsync(Guid id);
 }
+

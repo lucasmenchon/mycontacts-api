@@ -75,7 +75,6 @@ namespace MyContactsAPI.Services
                 return new ApiResponse("User not found for the email provided.", 403);
             }
 
-            // Construir o link de redefinição de senha
             var resetLink = $"www.lucas.tf/reset-password?token={JwtTokenService.GenerateToken(user)}";
 
             await new EmailService().SendVerificationEmailAsync(email, resetLink);

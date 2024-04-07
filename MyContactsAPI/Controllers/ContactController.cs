@@ -1,79 +1,68 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyContactsAPI.Interfaces;
 using MyContactsAPI.Models.ContactModels;
-using MyContactsAPI.ViewModels;
 
-namespace MyContactsAPI.Controllers
+namespace MyContactsAPI.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class ContactController : Controller
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class ContactController : Controller
+    private readonly IContactRepository _contactRepository;
+
+
+    public ContactController(IContactRepository contactRepository)
     {
-        private readonly IContactRepository _contactRepository;
-        
+        _contactRepository = contactRepository;
+    }
 
-        public ContactController(IContactRepository contactRepository)
+    [HttpGet]
+    public async Task<IActionResult> GetAllContacts()
+    {
+        List<ContactDto> contacts = await _contactRepository.GetUserContactsAsync();
+        return Ok(contacts);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateContact(ContactDto contact)
+    {
+        try
         {
-            _contactRepository = contactRepository;            
+            var response = await _contactRepository.CreateContactAsync(contact);
+            return Ok(response);
         }
-
-        [HttpGet]
-        public async Task<IActionResult> GetAllContacts()
+        catch (Exception error)
         {
-            List<Contact> contacts = await _contactRepository.GetUserContactsAsync();
-            return Ok(contacts);
+            return StatusCode(500, $"Oops!! Unable to register your contact, try again or contact support, error details: {error.Message}");
         }
+    }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateContact(Contact contact)
+    [HttpPut("UpdateContact={id}")]
+    public async Task<IActionResult> UpdateContact([FromBody] ContactDto contactUpdate)
+    {
+        try
         {
-            try
-            {
-                await _contactRepository.CreateContactAsync(contact);
-                return CreatedAtAction(nameof(GetAllContacts), new { id = contact.Id }, contact);
-            }
-            catch (Exception error)
-            {
-                return StatusCode(500, $"Oops!! Unable to register your contact, try again or contact support, error details: {error.Message}");
-            }
+            var response = await _contactRepository.UpdateContactAsync(contactUpdate);
+            return Ok(response);
         }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateContact(Guid id, [FromBody] Contact contactUpdate)
+        catch (Exception error)
         {
-            try
-            {
-                if (id != contactUpdate.Id)
-                {
-                    return BadRequest("Contact ID does not match the ID provided in the URL.");
-                }
-
-                await _contactRepository.UpdateContactAsync(id, contactUpdate);
-
-                return NoContent();
-            }
-            catch (Exception error)
-            {
-                return StatusCode(500, $"Oops!! Unable to update your contact, please try again or contact support, error details: {error.Message}");
-            }
+            return StatusCode(500, $"Oops!! Unable to update your contact, please try again or contact support, error details: {error.Message}");
         }
+    }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteContact(Guid id)
+    [HttpDelete("DeleteContact={id}")]
+    public async Task<IActionResult> DeleteContact(Guid id)
+    {
+        try
         {
-            try
-            {
-                bool result = await _contactRepository.DeleteContactAsync(id);
-                if (!result)
-                {
-                    return NotFound("Contact not found.");
-                }
-                return NoContent();
-            }
-            catch (Exception error)
-            {
-                return StatusCode(500, $"Oops!! Unable to delete your contact, try again or contact support, error details: {error.Message}");
-            }
+            var response = await _contactRepository.DeleteContactAsync(id);
+            return Ok(response);
+        }
+        catch (Exception error)
+        {
+            return StatusCode(500, $"Oops!! Unable to delete your contact, try again or contact support, error details: {error.Message}");
         }
     }
 }
+

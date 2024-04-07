@@ -3,7 +3,7 @@ using MyContactsAPI.Models;
 
 namespace MyContactsAPI.Interfaces;
 
-public interface IAuthService
+public interface IAuthRepository
 {
     Task<ApiResponse> UserSigIn(UserSignInDto userSignIn);
     Task<ApiResponse> CreateUserAsync(CreateUserDto createUserDto);

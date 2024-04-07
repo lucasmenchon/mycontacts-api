@@ -37,7 +37,7 @@ namespace MyContactsAPI.Repositories
 
                 await _dataContext.SaveChangesAsync();
 
-                return new ApiResponse("User updated successfully.", 200);
+                return new ApiResponse("User updated successfully.", 201);
             }
             catch
             {

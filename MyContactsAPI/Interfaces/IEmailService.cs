@@ -1,9 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿namespace MyContactsAPI.Interfaces;
 
-namespace MyContactsAPI.Interfaces
+public interface IEmailService
 {
-    public interface IEmailService
-    {
-        Task SendVerificationEmailAsync(string email, string verificationCode);
-    }
+    Task SendVerificationEmailAsync(string email, string verificationCode);
 }

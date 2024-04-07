@@ -1,13 +1,10 @@
 ﻿using MyContactsAPI.Dtos.Password;
 using MyContactsAPI.Models;
-using MyContactsAPI.Models.UserModels;
 
-namespace MyContactsAPI.Interfaces
+namespace MyContactsAPI.Interfaces;
+
+public interface IUserPasswordService
 {
-    public interface IUserPasswordService
-    {
-        Task<ApiResponse> ChangeUserPassword(ChangePasswordDto passwordToChange);
-        Task<ApiResponse> SendPasswordResetEmail(string email);
-    }
-
+    Task<ApiResponse> ChangeUserPassword(ChangePasswordDto passwordToChange);
+    Task<ApiResponse> SendPasswordResetEmail(string email);
 }
