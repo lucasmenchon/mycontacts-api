@@ -19,11 +19,6 @@ public static class Configuration
         public string Password { get; set; } = string.Empty;
     }
 
-    public class SendGridConfiguration
-    {
-        public string ApiKey { get; set; } = string.Empty;
-    }
-
     public class SecretsConfiguration
     {
         public string ApiKey { get; set; } = string.Empty;
