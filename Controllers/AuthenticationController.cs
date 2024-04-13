@@ -15,6 +15,13 @@ public class AuthenticationController : Controller
         _authService = userLogin;
     }
 
+    [HttpGet, Route("Test")]
+    public async Task<IActionResult> Test()
+    {
+        var response = "test";
+        return Ok(response);
+    }
+
     [HttpPost, Route("Login")]
     public async Task<IActionResult> LoginAccess(UserSignInDto userSigIn)
     {
