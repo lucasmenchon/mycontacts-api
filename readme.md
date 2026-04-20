@@ -26,3 +26,8 @@
     <li>Sending an email to confirm registration</li>
     <li>Send email if you forgot password</li>
 </ol>
+
+## Documentation
+- [Overview](docs/overview.md)
+- [Architecture](docs/architecture.md)
+- [Repository Prompt](docs/repository-prompt.md)
